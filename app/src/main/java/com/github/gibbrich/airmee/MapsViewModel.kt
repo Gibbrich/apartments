@@ -55,6 +55,10 @@ class MapsViewModel : ViewModel() {
     fun startFetchingLocation() = locationRepository.connect()
 
     fun stopFetchingLocation() = locationRepository.disconnect()
+
+    fun onChangeFiltersClick() {
+
+    }
 }
 
 enum class LoadingState {

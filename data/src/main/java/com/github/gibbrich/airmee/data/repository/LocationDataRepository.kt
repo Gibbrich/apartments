@@ -33,7 +33,10 @@ class LocationDataRepository(private val context: Context): LocationRepository {
         }
     }
 
-    override fun getLocation(): LatLng = LatLng(59.329440, 18.069124)
+    override fun getLocation(): Location = Location("").apply {
+        latitude = 59.329440
+        longitude = 18.069124
+    }
 
     override fun connect() {
         if (checkLocationPermission(context)) {

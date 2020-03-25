@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.LatLng
 
 interface LocationRepository {
     val locationSource: LiveData<Location>
-    fun getLocation(): LatLng
+    fun getLocation(): Location
     fun connect()
     fun disconnect()
 }

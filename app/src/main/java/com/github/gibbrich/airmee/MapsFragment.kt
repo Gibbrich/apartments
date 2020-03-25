@@ -16,10 +16,12 @@ import com.google.android.gms.maps.model.MarkerOptions
 import androidx.core.app.ActivityCompat.requestPermissions
 import android.content.pm.PackageManager
 import android.location.Location
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.gibbrich.airmee.core.checkLocationPermission
 import com.github.gibbrich.airmee.core.getLocationPermissions
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.Marker
+import kotlinx.android.synthetic.main.maps_fragment.*
 
 
 class MapsFragment : Fragment() {
@@ -31,13 +33,12 @@ class MapsFragment : Fragment() {
     private lateinit var viewModel: MapsViewModel
     private lateinit var googleMap: GoogleMap
     private var currentLocationMarker: Marker? = null
+    private var adapter: ApartmentsAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.maps_fragment, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.maps_fragment, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -50,9 +51,10 @@ class MapsFragment : Fragment() {
         mapFragment.getMapAsync { map ->
             googleMap = map
 
+            val latLng = viewModel.getUserLocation().let { LatLng(it.latitude, it.longitude) }
             googleMap.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
-                    viewModel.getUserLocation(),
+                    latLng,
                     DEFAULT_ZOOM
                 )
             )
@@ -73,6 +75,14 @@ class MapsFragment : Fragment() {
         }
 
         getLocationPermissionIfNeed()
+
+        apartments_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+
+        if (adapter == null) {
+            adapter = ApartmentsAdapter(viewModel.getUserLocation(), mutableListOf(), viewModel::onChangeFiltersClick)
+        }
+
+        apartments_list.adapter = adapter
     }
 
     override fun onResume() {
@@ -123,9 +133,17 @@ class MapsFragment : Fragment() {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
     }
 
-    private fun handleApartments(apartments: List<Apartment>) = apartments
-        .map(Apartment::toMarkerOptions)
-        .forEach { googleMap.addMarker(it) }
+    private fun handleApartments(apartments: List<Apartment>) {
+        adapter?.let {
+            it.items.clear()
+            it.items.addAll(apartments)
+            it.notifyDataSetChanged()
+        }
+
+        apartments
+            .map(Apartment::toMarkerOptions)
+            .forEach { googleMap.addMarker(it) }
+    }
 
     private fun getLocationPermissionIfNeed() {
         val activity = activity ?: return

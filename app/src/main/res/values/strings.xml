@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Airmee</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="apartments_list_no_items">No matches</string>
+    <string name="apartments_list_change_filters">Change filters</string>
+    <string name="apartments_list_item_beds_number">%d beds</string>
+    <string name="apartments_list_item_distance">%.1f km from you</string>
 </resources>
