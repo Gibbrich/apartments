@@ -10,5 +10,13 @@ class ApartmentsDataRepository(
     private val api: Api,
     private val db: AppDatabase
 ): ApartmentsRepository {
-    override suspend fun getApartments(): List<Apartment> = api.getApartments().map(ApartmentsConverter::fromNetwork)
+    override val cachedApartments = mutableListOf<Apartment>()
+
+    override suspend fun fetchApartments(): List<Apartment> = api
+        .getApartments()
+        .map(ApartmentsConverter::fromNetwork)
+        .also {
+            cachedApartments.clear()
+            cachedApartments.addAll(it)
+        }
 }

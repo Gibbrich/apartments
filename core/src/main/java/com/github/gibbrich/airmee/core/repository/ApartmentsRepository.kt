@@ -3,5 +3,6 @@ package com.github.gibbrich.airmee.core.repository
 import com.github.gibbrich.airmee.core.model.Apartment
 
 interface ApartmentsRepository {
-    suspend fun getApartments(): List<Apartment>
+    val cachedApartments: List<Apartment>
+    suspend fun fetchApartments(): List<Apartment>
 }

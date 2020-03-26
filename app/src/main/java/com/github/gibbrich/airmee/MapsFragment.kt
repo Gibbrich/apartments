@@ -1,6 +1,5 @@
 package com.github.gibbrich.airmee
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,12 +14,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import androidx.core.app.ActivityCompat.requestPermissions
 import android.content.pm.PackageManager
-import android.location.Location
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.gibbrich.airmee.core.checkLocationPermission
 import com.github.gibbrich.airmee.core.getLocationPermissions
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.Marker
+import com.github.gibbrich.airmee.model.ApartmentViewData
 import kotlinx.android.synthetic.main.maps_fragment.*
 
 
@@ -30,9 +28,8 @@ class MapsFragment : Fragment() {
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 42
     }
 
-    private lateinit var viewModel: MapsViewModel
+    private val viewModel: MapsViewModel by viewModels()
     private lateinit var googleMap: GoogleMap
-    private var currentLocationMarker: Marker? = null
     private var adapter: ApartmentsAdapter? = null
 
     override fun onCreateView(
@@ -42,9 +39,7 @@ class MapsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MapsViewModel::class.java)
         viewModel.apartments.observe(this, Observer(::handleApartments))
-        viewModel.getLocationsSource().observe(this, Observer(::handleLocations))
 
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -76,10 +71,14 @@ class MapsFragment : Fragment() {
 
         getLocationPermissionIfNeed()
 
-        apartments_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        apartments_list.layoutManager = LinearLayoutManager(
+            activity,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
 
         if (adapter == null) {
-            adapter = ApartmentsAdapter(viewModel.getUserLocation(), mutableListOf(), viewModel::onChangeFiltersClick)
+            adapter = ApartmentsAdapter(mutableListOf(), viewModel::onChangeFiltersClick)
         }
 
         apartments_list.adapter = adapter
@@ -118,22 +117,7 @@ class MapsFragment : Fragment() {
         }
     }
 
-    private fun handleLocations(location: Location) {
-        currentLocationMarker?.remove()
-
-        //Place current location marker
-        val latLng = LatLng(location.latitude, location.longitude)
-        val markerOptions = MarkerOptions()
-        markerOptions.position(latLng)
-        markerOptions.title("Current Position")
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
-        currentLocationMarker = googleMap.addMarker(markerOptions)
-
-        //move map camera
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
-    }
-
-    private fun handleApartments(apartments: List<Apartment>) {
+    private fun handleApartments(apartments: List<ApartmentViewData>) {
         adapter?.let {
             it.items.clear()
             it.items.addAll(apartments)
@@ -141,7 +125,7 @@ class MapsFragment : Fragment() {
         }
 
         apartments
-            .map(Apartment::toMarkerOptions)
+            .map(ApartmentViewData::toMarkerOptions)
             .forEach { googleMap.addMarker(it) }
     }
 
@@ -168,6 +152,6 @@ class MapsFragment : Fragment() {
     }
 }
 
-private fun Apartment.toMarkerOptions() = MarkerOptions()
+private fun ApartmentViewData.toMarkerOptions() = MarkerOptions()
     .position(LatLng(latitude, longitude))
     .title(name)

@@ -1,18 +1,21 @@
 package com.github.gibbrich.airmee
 
-import android.location.Location
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.github.gibbrich.airmee.core.model.Apartment
+import com.github.gibbrich.airmee.model.ApartmentViewData
 import kotlinx.android.synthetic.main.apartment_list_empty.view.*
 import kotlinx.android.synthetic.main.apartment_list_item.view.*
 
+/**
+ * For simplicity, distance to user in Apartment card won't be updated according
+ * to user current location. To refresh this data, user just need reopen the page
+ * todo - check, whether this is ok
+ */
 class ApartmentsAdapter(
-    var userLocation: Location,
-    var items: MutableList<Apartment>,
+    var items: MutableList<ApartmentViewData>,
     private val onChangeFiltersClick: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
@@ -65,15 +68,7 @@ class ApartmentsAdapter(
                     apartment.bedrooms
                 )
                 viewHolder.titleLabel.text = apartment.name
-
-                val distanceInMeters = Location("")
-                    .apply {
-                        latitude = apartment.latitude
-                        longitude = apartment.longitude
-                    }
-                    .distanceTo(userLocation)
-
-                viewHolder.distanceToLabel.text = context.getString(R.string.apartments_list_item_distance, distanceInMeters)
+                viewHolder.distanceToLabel.text = context.getString(R.string.apartments_list_item_distance, apartment.distanceToUserKm)
             }
 
             else -> Unit
