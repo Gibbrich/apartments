@@ -10,6 +10,7 @@ import com.github.gibbrich.airmee.core.repository.ApartmentsRepository
 import com.github.gibbrich.airmee.core.repository.LocationRepository
 import com.github.gibbrich.airmee.di.DI
 import com.github.gibbrich.airmee.model.ApartmentViewData
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,9 +26,11 @@ class MapsViewModel : ViewModel() {
     private val stateSource = MutableLiveData<LoadingState?>()
     val loadingState: LiveData<LoadingState?> = stateSource
 
+    private val cameraPositionSource = MutableLiveData<LatLng>()
+    val cameraPosition: LiveData<LatLng> = cameraPositionSource
+
     init {
         DI.appComponent.inject(this)
-//        observeUserLocation()
     }
 
     fun getApartments() {
@@ -63,12 +66,10 @@ class MapsViewModel : ViewModel() {
 
     }
 
-//    private fun observeUserLocation() = getLocationsSource().observeForever {
-//        apartmentsSource.value = getApartmentListItems(
-//            apartmentsRepository.cachedApartments,
-//            it
-//        )
-//    }
+    fun onScrollEnd(cardPosition: Int) {
+        val data = apartments.value!![cardPosition]
+        cameraPositionSource.value = LatLng(data.latitude, data.longitude)
+    }
 
     private fun getApartmentListItems(
         apartments: List<Apartment>,

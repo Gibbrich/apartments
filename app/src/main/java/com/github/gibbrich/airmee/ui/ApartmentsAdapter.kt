@@ -1,10 +1,11 @@
-package com.github.gibbrich.airmee
+package com.github.gibbrich.airmee.ui
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.github.gibbrich.airmee.R
 import com.github.gibbrich.airmee.model.ApartmentViewData
 import kotlinx.android.synthetic.main.apartment_list_empty.view.*
 import kotlinx.android.synthetic.main.apartment_list_item.view.*
@@ -45,7 +46,8 @@ class ApartmentsAdapter(
                     .from(parent.context)
                     .inflate(R.layout.apartment_list_empty, parent, false)
 
-                val footerViewHolder = FooterViewHolder(view, onChangeFiltersClick)
+                val footerViewHolder =
+                    FooterViewHolder(view, onChangeFiltersClick)
                 this.footerViewHolder = footerViewHolder
                 footerViewHolder
             }
@@ -60,15 +62,15 @@ class ApartmentsAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
         when (getItemViewType(position)) {
             VIEW_TYPE_ITEM -> {
-                val viewHolder = holder as ApartmentViewHolder
+                holder as ApartmentViewHolder
                 val apartment = items[position]
-                val context = viewHolder.itemView.context
-                viewHolder.bedsNumberLabel.text = context.getString(
+                val context = holder.itemView.context
+                holder.bedsNumberLabel.text = context.getString(
                     R.string.apartments_list_item_beds_number,
                     apartment.bedrooms
                 )
-                viewHolder.titleLabel.text = apartment.name
-                viewHolder.distanceToLabel.text = context.getString(R.string.apartments_list_item_distance, apartment.distanceToUserKm)
+                holder.titleLabel.text = apartment.name
+                holder.distanceToLabel.text = context.getString(R.string.apartments_list_item_distance, apartment.distanceToUserKm)
             }
 
             else -> Unit
