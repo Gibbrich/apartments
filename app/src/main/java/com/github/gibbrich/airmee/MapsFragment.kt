@@ -13,10 +13,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import androidx.core.app.ActivityCompat.requestPermissions
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.github.gibbrich.airmee.core.checkLocationPermission
 import com.github.gibbrich.airmee.core.getLocationPermissions
@@ -28,7 +26,6 @@ import kotlinx.android.synthetic.main.maps_fragment.*
 
 class MapsFragment : Fragment() {
     companion object {
-        private const val DEFAULT_ZOOM = 15f
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 42
     }
 
@@ -44,12 +41,14 @@ class MapsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel.apartments.observe(this, Observer(::handleApartments))
-        viewModel.cameraPosition.observe(this, Observer(::moveCameraFocus))
 
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync { map ->
             googleMap = map
+
+            viewModel.cameraPosition.observe(this, Observer(::moveCameraFocus))
+            viewModel.cameraZoom.observe(this, Observer(::handleCameraZoom))
 
             val latLng = viewModel.getUserLocation().let { LatLng(it.latitude, it.longitude) }
             moveCameraFocus(latLng)
@@ -77,7 +76,7 @@ class MapsFragment : Fragment() {
             LinearLayoutManager.HORIZONTAL,
             false
         )
-        apartments_list.layoutManager = layoutManager
+        map_fragment_apartments_list.layoutManager = layoutManager
 
         if (adapter == null) {
             adapter = ApartmentsAdapter(
@@ -86,10 +85,10 @@ class MapsFragment : Fragment() {
             )
         }
 
-        apartments_list.adapter = adapter
+        map_fragment_apartments_list.adapter = adapter
         val snapHelper = SnapHelperOneByOne()
-        snapHelper.attachToRecyclerView(apartments_list)
-        apartments_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        snapHelper.attachToRecyclerView(map_fragment_apartments_list)
+        map_fragment_apartments_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     val centerView = snapHelper.findSnapView(layoutManager) ?: return
@@ -99,7 +98,7 @@ class MapsFragment : Fragment() {
             }
         })
 
-        apartments_parameters_button.setOnClickListener {
+        map_fragment_apartments_parameters_button.setOnClickListener {
             fragmentManager?.beginTransaction()
                 ?.add(
                     R.id.fragment_apartment_parameters,
@@ -109,12 +108,27 @@ class MapsFragment : Fragment() {
                 ?.addToBackStack("ApartmentParametersFragment")
                 ?.commit()
         }
+
+        map_fragment_zoom_in.setOnClickListener {
+            viewModel.onZoomChange(true)
+        }
+
+        map_fragment_zoom_out.setOnClickListener {
+            viewModel.onZoomChange(false)
+        }
+
+        map_fragment_current_position.setOnClickListener {
+            viewModel.onCurrentLocationButtonClick()
+        }
     }
+
+    private fun handleCameraZoom(zoom: Float) =
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(zoom))
 
     private fun moveCameraFocus(position: LatLng) = googleMap.animateCamera(
         CameraUpdateFactory.newLatLngZoom(
             position,
-            DEFAULT_ZOOM
+            viewModel.cameraZoom.value!!
         )
     )
 
@@ -176,13 +190,8 @@ class MapsFragment : Fragment() {
 
     private fun updateLocationUI(isLocationPermissionGranted: Boolean) {
         val mMap = googleMap
-        if (isLocationPermissionGranted) {
-            mMap.isMyLocationEnabled = true
-            mMap.uiSettings.isMyLocationButtonEnabled = true
-        } else {
-            mMap.isMyLocationEnabled = false
-            mMap.uiSettings.isMyLocationButtonEnabled = false
-        }
+        mMap.isMyLocationEnabled = isLocationPermissionGranted
+        mMap.uiSettings.isMyLocationButtonEnabled = false
     }
 }
 

@@ -15,6 +15,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MapsViewModel : ViewModel() {
+    companion object {
+        private const val DEFAULT_ZOOM = 15f
+    }
+
     @Inject
     internal lateinit var apartmentsRepository: ApartmentsRepository
     @Inject
@@ -28,6 +32,9 @@ class MapsViewModel : ViewModel() {
 
     private val cameraPositionSource = MutableLiveData<LatLng>()
     val cameraPosition: LiveData<LatLng> = cameraPositionSource
+
+    private val cameraZoomSource = MutableLiveData(DEFAULT_ZOOM)
+    val cameraZoom: LiveData<Float> = cameraZoomSource
 
     init {
         DI.appComponent.inject(this)
@@ -64,6 +71,20 @@ class MapsViewModel : ViewModel() {
 
     fun onChangeFiltersClick() {
 
+    }
+
+    fun onZoomChange(isZoomIn: Boolean) {
+        val currentZoom = cameraZoomSource.value!!
+        cameraZoomSource.value = if (isZoomIn) {
+            currentZoom.inc()
+        } else {
+            currentZoom.dec()
+        }
+    }
+
+    fun onCurrentLocationButtonClick() {
+        val location = locationRepository.locationSource.value!!
+        cameraPositionSource.value = LatLng(location.latitude, location.longitude)
     }
 
     fun onScrollEnd(cardPosition: Int) {
