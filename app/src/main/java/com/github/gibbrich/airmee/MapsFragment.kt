@@ -98,6 +98,17 @@ class MapsFragment : Fragment() {
                 }
             }
         })
+
+        apartments_parameters_button.setOnClickListener {
+            fragmentManager?.beginTransaction()
+                ?.add(
+                    R.id.fragment_apartment_parameters,
+                    ApartmentParametersFragment(),
+                    "ApartmentParametersFragment"
+                )
+                ?.addToBackStack("ApartmentParametersFragment")
+                ?.commit()
+        }
     }
 
     private fun moveCameraFocus(position: LatLng) = googleMap.animateCamera(

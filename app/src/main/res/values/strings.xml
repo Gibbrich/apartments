@@ -6,4 +6,8 @@
     <string name="apartments_list_change_filters">Change filters</string>
     <string name="apartments_list_item_beds_number">%d beds</string>
     <string name="apartments_list_item_distance">%.1f km from you</string>
+
+    <string name="apartment_parameters_rooms_and_beds">Rooms and Beds</string>
+    <string name="apartment_parameters_beds">Beds</string>
+    <string name="apartment_parameters_dates">Dates</string>
 </resources>

@@ -20,7 +20,7 @@ object Deps {
         const val cardView = "androidx.cardview:cardview:1.0.0"
         const val appCompat = "androidx.appcompat:appcompat:1.1.0"
         const val core = "androidx.core:core-ktx:1.2.0"
-        const val material = "com.google.android.material:material:1.0.0"
+        const val material = "com.google.android.material:material:1.1.0"
         const val flexBoxLayout = "com.google.android:flexbox:2.0.1"
         const val paging = "androidx.paging:paging-runtime-ktx:2.1.1"
 
