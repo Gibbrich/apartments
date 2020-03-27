@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.gibbrich.airmee.core.model.Apartment
+import com.github.gibbrich.airmee.core.repository.ApartmentParametersRepository
 import com.github.gibbrich.airmee.core.repository.ApartmentsRepository
 import com.github.gibbrich.airmee.core.repository.LocationRepository
 import com.github.gibbrich.airmee.di.DI
@@ -23,6 +24,8 @@ class MapsViewModel : ViewModel() {
     internal lateinit var apartmentsRepository: ApartmentsRepository
     @Inject
     internal lateinit var locationRepository: LocationRepository
+    @Inject
+    internal lateinit var apartmentParametersRepository: ApartmentParametersRepository
 
     private val apartmentsSource = MutableLiveData<List<ApartmentViewData>>(emptyList())
     val apartments: LiveData<List<ApartmentViewData>> = apartmentsSource
