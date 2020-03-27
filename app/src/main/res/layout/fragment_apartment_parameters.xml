@@ -26,27 +26,27 @@
         app:layout_constraintTop_toBottomOf="@+id/apartment_parameters_rooms_and_beds_label" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/apartment_parameters_increase_beds_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:src="@drawable/ic_add_circle_outline_black_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView3"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toTopOf="@+id/textView3" />
+        app:layout_constraintBottom_toBottomOf="@+id/apartment_parameters_beds_number_label"
+        app:layout_constraintStart_toEndOf="@+id/apartment_parameters_beds_number_label"
+        app:layout_constraintTop_toTopOf="@+id/apartment_parameters_beds_number_label" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/apartment_parameters_decrease_beds_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:src="@drawable/ic_remove_circle_outline_black_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView3"
-        app:layout_constraintEnd_toStartOf="@+id/textView3"
-        app:layout_constraintTop_toTopOf="@+id/textView3" />
+        app:layout_constraintBottom_toBottomOf="@+id/apartment_parameters_beds_number_label"
+        app:layout_constraintEnd_toStartOf="@+id/apartment_parameters_beds_number_label"
+        app:layout_constraintTop_toTopOf="@+id/apartment_parameters_beds_number_label" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/apartment_parameters_beds_number_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"

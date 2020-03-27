@@ -1,4 +1,4 @@
-package com.github.gibbrich.airmee
+package com.github.gibbrich.airmee.viewModel
 
 import android.location.Location
 import androidx.lifecycle.LiveData

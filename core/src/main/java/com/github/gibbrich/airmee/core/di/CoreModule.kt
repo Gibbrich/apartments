@@ -1,6 +1,8 @@
 package com.github.gibbrich.airmee.core.di
 
 import android.content.Context
+import com.github.gibbrich.airmee.core.repository.ResourceDataManager
+import com.github.gibbrich.airmee.core.repository.ResourceManager
 import dagger.Module
 import dagger.Provides
 
@@ -12,4 +14,8 @@ class CoreModule(
     @Provides
     @CoreScope
     fun provideContext(): Context = context
+
+    @Provides
+    @CoreScope
+    fun provideResourceManager(): ResourceManager = ResourceDataManager(context)
 }

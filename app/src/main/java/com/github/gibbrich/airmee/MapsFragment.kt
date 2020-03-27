@@ -21,6 +21,7 @@ import com.github.gibbrich.airmee.core.getLocationPermissions
 import com.github.gibbrich.airmee.model.ApartmentViewData
 import com.github.gibbrich.airmee.ui.ApartmentsAdapter
 import com.github.gibbrich.airmee.ui.utils.SnapHelperOneByOne
+import com.github.gibbrich.airmee.viewModel.MapsViewModel
 import kotlinx.android.synthetic.main.maps_fragment.*
 
 
@@ -44,30 +45,7 @@ class MapsFragment : Fragment() {
 
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync { map ->
-            googleMap = map
-
-            viewModel.cameraPosition.observe(this, Observer(::moveCameraFocus))
-            viewModel.cameraZoom.observe(this, Observer(::handleCameraZoom))
-
-            val latLng = viewModel.getUserLocation().let { LatLng(it.latitude, it.longitude) }
-            moveCameraFocus(latLng)
-
-            viewModel.getApartments()
-
-
-            activity?.let {
-                if (checkLocationPermission(it)) {
-                    updateLocationUI(true)
-                } else {
-                    requestPermissions(
-                        it,
-                        getLocationPermissions(),
-                        PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
-                    )
-                }
-            }
-        }
+        mapFragment.getMapAsync(this::onMapReady)
 
         getLocationPermissionIfNeed()
 
@@ -98,6 +76,7 @@ class MapsFragment : Fragment() {
             }
         })
 
+        // todo - fix bug, related to multiple fragments open
         map_fragment_apartments_parameters_button.setOnClickListener {
             fragmentManager?.beginTransaction()
                 ?.add(
@@ -119,6 +98,30 @@ class MapsFragment : Fragment() {
 
         map_fragment_current_position.setOnClickListener {
             viewModel.onCurrentLocationButtonClick()
+        }
+    }
+
+    private fun onMapReady(map: GoogleMap) {
+        googleMap = map
+
+        viewModel.cameraPosition.observe(this, Observer(::moveCameraFocus))
+        viewModel.cameraZoom.observe(this, Observer(::handleCameraZoom))
+
+        val latLng = viewModel.getUserLocation().let { LatLng(it.latitude, it.longitude) }
+        moveCameraFocus(latLng)
+
+        viewModel.getApartments()
+
+        activity?.let {
+            if (checkLocationPermission(it)) {
+                updateLocationUI(true)
+            } else {
+                requestPermissions(
+                    it,
+                    getLocationPermissions(),
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
+                )
+            }
         }
     }
 
