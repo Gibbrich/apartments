@@ -1,10 +1,8 @@
 package com.github.gibbrich.airmee.viewModel
 
 import android.location.Location
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.github.gibbrich.airmee.core.combineLatest
 import com.github.gibbrich.airmee.core.model.Apartment
 import com.github.gibbrich.airmee.core.repository.ApartmentParametersRepository
 import com.github.gibbrich.airmee.core.repository.ApartmentsRepository
@@ -27,8 +25,16 @@ class MapsViewModel : ViewModel() {
     @Inject
     internal lateinit var apartmentParametersRepository: ApartmentParametersRepository
 
+    init {
+        DI.appComponent.inject(this)
+    }
+
     private val apartmentsSource = MutableLiveData<List<ApartmentViewData>>(emptyList())
     val apartments: LiveData<List<ApartmentViewData>> = apartmentsSource
+        .combineLatest(apartmentParametersRepository.bedsNumber)
+        .map { pair ->
+            pair.first.filter { it.beds >= pair.second }
+        }
 
     private val stateSource = MutableLiveData<LoadingState?>()
     val loadingState: LiveData<LoadingState?> = stateSource
@@ -38,10 +44,6 @@ class MapsViewModel : ViewModel() {
 
     private val cameraZoomSource = MutableLiveData(DEFAULT_ZOOM)
     val cameraZoom: LiveData<Float> = cameraZoomSource
-
-    init {
-        DI.appComponent.inject(this)
-    }
 
     fun getApartments() {
         if (stateSource.value == LoadingState.LOADING) {

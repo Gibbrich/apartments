@@ -67,7 +67,7 @@ class ApartmentsAdapter(
                 val context = holder.itemView.context
                 holder.bedsNumberLabel.text = context.getString(
                     R.string.apartments_list_item_beds_number,
-                    apartment.bedrooms
+                    apartment.beds
                 )
                 holder.titleLabel.text = apartment.name
                 holder.distanceToLabel.text = context.getString(R.string.apartments_list_item_distance, apartment.distanceToUserKm)
