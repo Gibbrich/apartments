@@ -24,7 +24,7 @@ import com.github.gibbrich.airmee.ui.utils.SnapHelperOneByOne
 import com.github.gibbrich.airmee.viewModel.MapsViewModel
 import kotlinx.android.synthetic.main.maps_fragment.*
 
-
+// todo - on pin on map click, change recycler item
 class MapsFragment : Fragment() {
     companion object {
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 42
@@ -41,7 +41,6 @@ class MapsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.apartments.observe(this, Observer(::handleApartments))
 
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -104,6 +103,7 @@ class MapsFragment : Fragment() {
     private fun onMapReady(map: GoogleMap) {
         googleMap = map
 
+        viewModel.apartments.observe(this, Observer(::handleApartments))
         viewModel.cameraPosition.observe(this, Observer(::moveCameraFocus))
         viewModel.cameraZoom.observe(this, Observer(::handleCameraZoom))
 
@@ -175,7 +175,7 @@ class MapsFragment : Fragment() {
             it.notifyDataSetChanged()
         }
 
-        // todo - remove pins from map on new data arrive
+        googleMap.clear()
 
         apartments
             .map(ApartmentViewData::toMarkerOptions)

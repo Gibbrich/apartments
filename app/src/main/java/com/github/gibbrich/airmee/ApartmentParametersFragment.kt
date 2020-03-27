@@ -47,6 +47,14 @@ class ApartmentParametersFragment : Fragment() {
         apartment_parameters_increase_beds_count.setOnClickListener {
             viewModel.onChangeBedButtonClick(true)
         }
+
+        apartment_parameters_show_all_variants.setOnClickListener {
+            fragmentManager?.popBackStack()
+        }
+
+        apartment_parameters_clear_filters.setOnClickListener {
+            viewModel.onClearFiltersButtonClick()
+        }
     }
 
     private fun handleDates(dates: String) {

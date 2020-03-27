@@ -18,12 +18,15 @@ class ApartmentParametersDataRepository : ApartmentParametersRepository {
 
     override fun changeBedsQuantity(isIncrease: Boolean) {
         val apartmentFilter = filter.value!!
-        val newBedsQuantity = if (isIncrease) {
+        val beds = if (isIncrease) {
             apartmentFilter.beds.inc()
         } else {
             apartmentFilter.beds.dec()
         }
-        filter.value = apartmentFilter.copy(beds = newBedsQuantity)
+
+        val result = beds.coerceAtLeast(0)
+
+        filter.value = apartmentFilter.copy(beds = result)
     }
 
     override fun changeRange(bookingRange: BookingRange?) {

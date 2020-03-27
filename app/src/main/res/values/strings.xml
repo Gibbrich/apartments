@@ -10,4 +10,6 @@
     <string name="apartment_parameters_rooms_and_beds">Rooms and Beds</string>
     <string name="apartment_parameters_beds">Beds</string>
     <string name="apartment_parameters_dates">Dates</string>
+    <string name="apartment_parameters_show_apartments">Show apartments</string>
+    <string name="apartment_parameters_clear_filters">Clear all</string>
 </resources>

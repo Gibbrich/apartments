@@ -33,6 +33,8 @@ class ApartmentParametersViewModel : ViewModel() {
     fun onConfirmDatesButtonClick(bookingRange: BookingRange) =
         apartmentParametersRepository.changeRange(bookingRange)
 
+    fun onClearFiltersButtonClick() = apartmentParametersRepository.clearFilters()
+
     private fun getRangeRepresentation(bookingRange: BookingRange?): String = if (bookingRange == null) {
         resourceManager.getString(R.string.apartment_parameters_dates)
     } else {
