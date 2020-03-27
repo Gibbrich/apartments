@@ -175,6 +175,8 @@ class MapsFragment : Fragment() {
             it.notifyDataSetChanged()
         }
 
+        // todo - remove pins from map on new data arrive
+
         apartments
             .map(ApartmentViewData::toMarkerOptions)
             .forEach { googleMap.addMarker(it) }

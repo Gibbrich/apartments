@@ -4,6 +4,7 @@ import android.location.Location
 import androidx.lifecycle.*
 import com.github.gibbrich.airmee.core.combineLatest
 import com.github.gibbrich.airmee.core.model.Apartment
+import com.github.gibbrich.airmee.core.model.ApartmentFilter
 import com.github.gibbrich.airmee.core.repository.ApartmentParametersRepository
 import com.github.gibbrich.airmee.core.repository.ApartmentsRepository
 import com.github.gibbrich.airmee.core.repository.LocationRepository
@@ -31,9 +32,9 @@ class MapsViewModel : ViewModel() {
 
     private val apartmentsSource = MutableLiveData<List<ApartmentViewData>>(emptyList())
     val apartments: LiveData<List<ApartmentViewData>> = apartmentsSource
-        .combineLatest(apartmentParametersRepository.bedsNumber)
-        .map { pair ->
-            pair.first.filter { it.beds >= pair.second }
+        .combineLatest(apartmentParametersRepository.filter)
+        .map {
+            filterApartmentsList(it.first, it.second)
         }
 
     private val stateSource = MutableLiveData<LoadingState?>()
@@ -95,6 +96,14 @@ class MapsViewModel : ViewModel() {
     fun onScrollEnd(cardPosition: Int) {
         val data = apartments.value!![cardPosition]
         cameraPositionSource.value = LatLng(data.latitude, data.longitude)
+    }
+
+    private fun filterApartmentsList(
+        list: List<ApartmentViewData>,
+        filter: ApartmentFilter
+    ): List<ApartmentViewData> {
+        // todo - implement filtering by data
+        return list.filter { it.beds >= filter.beds }
     }
 
     private fun getApartmentListItems(
