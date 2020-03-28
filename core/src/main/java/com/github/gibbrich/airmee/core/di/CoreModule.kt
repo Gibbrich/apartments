@@ -3,8 +3,8 @@ package com.github.gibbrich.airmee.core.di
 import android.content.Context
 import com.github.gibbrich.airmee.core.repository.ApartmentParametersDataRepository
 import com.github.gibbrich.airmee.core.repository.ApartmentParametersRepository
-import com.github.gibbrich.airmee.core.repository.ResourceDataManager
-import com.github.gibbrich.airmee.core.repository.ResourceManager
+import com.github.gibbrich.airmee.core.manager.ResourceDataManager
+import com.github.gibbrich.airmee.core.manager.ResourceManager
 import dagger.Module
 import dagger.Provides
 
@@ -19,7 +19,8 @@ class CoreModule(
 
     @Provides
     @CoreScope
-    fun provideResourceManager(): ResourceManager = ResourceDataManager(context)
+    fun provideResourceManager(): ResourceManager =
+        ResourceDataManager(context)
 
     @Provides
     @CoreScope

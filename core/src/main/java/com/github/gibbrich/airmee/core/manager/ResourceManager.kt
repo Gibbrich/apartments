@@ -1,4 +1,4 @@
-package com.github.gibbrich.airmee.core.repository
+package com.github.gibbrich.airmee.core.manager
 
 import android.content.Context
 import androidx.annotation.StringRes

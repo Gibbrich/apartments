@@ -7,7 +7,7 @@ import com.github.gibbrich.airmee.R
 import com.github.gibbrich.airmee.core.model.ApartmentFilter
 import com.github.gibbrich.airmee.core.model.BookingRange
 import com.github.gibbrich.airmee.core.repository.ApartmentParametersRepository
-import com.github.gibbrich.airmee.core.repository.ResourceManager
+import com.github.gibbrich.airmee.core.manager.ResourceManager
 import com.github.gibbrich.airmee.di.DI
 import java.text.SimpleDateFormat
 import java.util.*

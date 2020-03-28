@@ -18,11 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.gibbrich.airmee.core.checkLocationPermission
 import com.github.gibbrich.airmee.core.getLocationPermissions
+import com.github.gibbrich.airmee.manager.INavigationManager
+import com.github.gibbrich.airmee.di.DI
 import com.github.gibbrich.airmee.model.ApartmentViewData
 import com.github.gibbrich.airmee.ui.ApartmentsAdapter
 import com.github.gibbrich.airmee.ui.utils.SnapHelperOneByOne
 import com.github.gibbrich.airmee.viewModel.MapsViewModel
 import kotlinx.android.synthetic.main.maps_fragment.*
+import javax.inject.Inject
 
 // todo - on pin on map click, change recycler item
 class MapsFragment : Fragment() {
@@ -30,9 +33,16 @@ class MapsFragment : Fragment() {
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 42
     }
 
+    @Inject
+    internal lateinit var navigationManager: INavigationManager
+
     private val viewModel: MapsViewModel by viewModels()
     private lateinit var googleMap: GoogleMap
     private var adapter: ApartmentsAdapter? = null
+
+    init {
+        DI.appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,14 +88,15 @@ class MapsFragment : Fragment() {
 
         // todo - fix bug, related to multiple fragments open
         map_fragment_apartments_parameters_button.setOnClickListener {
-            fragmentManager?.beginTransaction()
-                ?.add(
-                    R.id.fragment_apartment_parameters,
-                    ApartmentParametersFragment(),
-                    "ApartmentParametersFragment"
-                )
-                ?.addToBackStack("ApartmentParametersFragment")
-                ?.commit()
+//            fragmentManager?.beginTransaction()
+//                ?.add(
+//                    R.id.fragment_apartment_parameters,
+//                    ApartmentParametersFragment(),
+//                    "ApartmentParametersFragment"
+//                )
+//                ?.addToBackStack("ApartmentParametersFragment")
+//                ?.commit()
+            navigationManager.switchToApartmentsParametersScreen()
         }
 
         map_fragment_zoom_in.setOnClickListener {
@@ -103,14 +114,15 @@ class MapsFragment : Fragment() {
 
     // todo - fix bug, related to multiple fragments open
     private fun openApartmentBooking() {
-        fragmentManager?.beginTransaction()
-            ?.add(
-                R.id.fragment_apartment_parameters,
-                ApartmentBookingFragment(),
-                "ApartmentBookingFragment"
-            )
-            ?.addToBackStack("ApartmentBookingFragment")
-            ?.commit()
+//        fragmentManager?.beginTransaction()
+//            ?.add(
+//                R.id.fragment_apartment_parameters,
+//                ApartmentBookingFragment(),
+//                "ApartmentBookingFragment"
+//            )
+//            ?.addToBackStack("ApartmentBookingFragment")
+//            ?.commit()
+        navigationManager.switchToApartmentBookingScreen()
     }
 
     private fun onMapReady(map: GoogleMap) {

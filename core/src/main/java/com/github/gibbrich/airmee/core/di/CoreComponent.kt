@@ -2,7 +2,7 @@ package com.github.gibbrich.airmee.core.di
 
 import android.content.Context
 import com.github.gibbrich.airmee.core.repository.ApartmentParametersRepository
-import com.github.gibbrich.airmee.core.repository.ResourceManager
+import com.github.gibbrich.airmee.core.manager.ResourceManager
 import dagger.Component
 
 @CoreScope

@@ -4,7 +4,7 @@ import com.github.gibbrich.airmee.core.di.CoreComponent
 import com.github.gibbrich.airmee.core.repository.ApartmentParametersRepository
 import com.github.gibbrich.airmee.core.repository.ApartmentsRepository
 import com.github.gibbrich.airmee.core.repository.LocationRepository
-import com.github.gibbrich.airmee.core.repository.ResourceManager
+import com.github.gibbrich.airmee.core.manager.ResourceManager
 import com.github.gibbrich.airmee.data.di.module.ApiModule
 import com.github.gibbrich.airmee.data.di.module.DBModule
 import com.github.gibbrich.airmee.data.di.module.DataModule

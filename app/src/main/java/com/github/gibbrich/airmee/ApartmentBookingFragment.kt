@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.github.gibbrich.airmee.core.model.BookingRange
+import com.github.gibbrich.airmee.utils.showDateRangePicker
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.android.synthetic.main.apartment_booking_fragment.*
 
@@ -26,15 +27,7 @@ class ApartmentBookingFragment : Fragment() {
         viewModel.bookingRange.observe(this, Observer(::handleBookingRange))
 
         apartment_booking_select_dates_button.setOnClickListener {
-            MaterialDatePicker.Builder
-                .dateRangePicker()
-                .build()
-                .apply {
-                    addOnPositiveButtonClickListener {
-                        viewModel.onConfirmDatesButtonClick(BookingRange(it.first!!, it.second!!))
-                    }
-                }
-                .show(fragmentManager!!, "asdf")
+            showDateRangePicker(viewModel::onConfirmDatesButtonClick)
         }
     }
 

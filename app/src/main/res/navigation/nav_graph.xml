@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/mapsFragment">
+
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.github.gibbrich.airmee.MapsFragment"
+        android:label="maps_fragment"
+        tools:layout="@layout/maps_fragment" >
+        <action
+            android:id="@+id/action_mapsFragment_to_apartmentBookingFragment"
+            app:destination="@id/apartmentBookingFragment" />
+        <action
+            android:id="@+id/action_mapsFragment_to_apartmentParametersFragment"
+            app:destination="@id/apartmentParametersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/apartmentBookingFragment"
+        android:name="com.github.gibbrich.airmee.ApartmentBookingFragment"
+        android:label="apartment_booking_fragment"
+        tools:layout="@layout/apartment_booking_fragment" />
+    <fragment
+        android:id="@+id/apartmentParametersFragment"
+        android:name="com.github.gibbrich.airmee.ApartmentParametersFragment"
+        android:label="fragment_apartment_parameters"
+        tools:layout="@layout/fragment_apartment_parameters" />
+</navigation>
