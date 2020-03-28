@@ -1,4 +1,4 @@
-package com.github.gibbrich.airmee
+package com.github.gibbrich.airmee.ui.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.github.gibbrich.airmee.viewModel.ApartmentViewModel
+import com.github.gibbrich.airmee.viewModel.ApartmentViewModelFactory
+import com.github.gibbrich.airmee.R
 import com.github.gibbrich.airmee.di.DI
 import com.github.gibbrich.airmee.manager.INavigationManager
 import com.github.gibbrich.airmee.utils.showDateRangePicker

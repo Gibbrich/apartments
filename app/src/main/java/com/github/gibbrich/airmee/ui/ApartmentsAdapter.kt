@@ -11,9 +11,8 @@ import kotlinx.android.synthetic.main.apartment_list_empty.view.*
 import kotlinx.android.synthetic.main.apartment_list_item.view.*
 
 /**
- * For simplicity, distance to user in Apartment card won't be updated according
- * to user current location. To refresh this data, user just need reopen the page
- * todo - check, whether this is ok
+ * For simplicity, distance to user in Apartment item card won't be updated according
+ * to user current location. To refresh this data, user just need reopen the map page.
  */
 class ApartmentsAdapter(
     var items: MutableList<ApartmentViewData>,

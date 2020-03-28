@@ -1,11 +1,11 @@
-package com.github.gibbrich.airmee
+package com.github.gibbrich.airmee.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
+import com.github.gibbrich.airmee.R
 import com.github.gibbrich.airmee.di.DI
 import com.github.gibbrich.airmee.manager.INavigationManager
-import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {

@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 
 interface LocationRepository {
     val locationSource: LiveData<Location>
-    fun getLocation(): Location
     fun connect()
     fun disconnect()
 }

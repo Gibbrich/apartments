@@ -1,8 +1,16 @@
 package com.github.gibbrich.airmee.manager
 
 import androidx.navigation.NavController
-import com.github.gibbrich.airmee.ApartmentBookingFragment
+import com.github.gibbrich.airmee.ui.fragment.ApartmentBookingFragment
 import com.github.gibbrich.airmee.R
+
+interface INavigationManager {
+    var navController: NavController?
+
+    fun switchToApartmentsParametersScreen()
+    fun switchToApartmentBookingScreen(apartmentId: Int)
+    fun exit()
+}
 
 class NavigationManager: INavigationManager {
     override var navController: NavController? = null

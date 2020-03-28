@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.github.gibbrich.airmee.MapsFragment"
+        android:name="com.github.gibbrich.airmee.ui.fragment.MapsFragment"
         android:label="maps_fragment"
         tools:layout="@layout/maps_fragment" >
         <action
@@ -19,12 +19,12 @@
     </fragment>
     <fragment
         android:id="@+id/apartmentBookingFragment"
-        android:name="com.github.gibbrich.airmee.ApartmentBookingFragment"
+        android:name="com.github.gibbrich.airmee.ui.fragment.ApartmentBookingFragment"
         android:label="apartment_booking_fragment"
         tools:layout="@layout/apartment_booking_fragment" />
     <fragment
         android:id="@+id/apartmentParametersFragment"
-        android:name="com.github.gibbrich.airmee.ApartmentParametersFragment"
+        android:name="com.github.gibbrich.airmee.ui.fragment.ApartmentParametersFragment"
         android:label="fragment_apartment_parameters"
         tools:layout="@layout/fragment_apartment_parameters" />
 </navigation>

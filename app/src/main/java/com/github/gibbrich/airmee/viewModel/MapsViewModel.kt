@@ -6,7 +6,7 @@ import com.github.gibbrich.airmee.core.combineLatest
 import com.github.gibbrich.airmee.core.model.Apartment
 import com.github.gibbrich.airmee.core.model.ApartmentFilter
 import com.github.gibbrich.airmee.core.model.isNotIntersect
-import com.github.gibbrich.airmee.core.repository.ApartmentParametersRepository
+import com.github.gibbrich.airmee.core.repository.ApartmentFiltersRepository
 import com.github.gibbrich.airmee.core.repository.ApartmentsRepository
 import com.github.gibbrich.airmee.core.repository.LocationRepository
 import com.github.gibbrich.airmee.di.DI
@@ -25,24 +25,25 @@ class MapsViewModel : ViewModel() {
     @Inject
     internal lateinit var locationRepository: LocationRepository
     @Inject
-    internal lateinit var apartmentParametersRepository: ApartmentParametersRepository
+    internal lateinit var apartmentFiltersRepository: ApartmentFiltersRepository
 
     init {
         DI.appComponent.inject(this)
     }
 
     val apartments: LiveData<List<ApartmentViewData>> = apartmentsRepository.cachedApartments
-        .combineLatest(apartmentParametersRepository.filter)
+        .combineLatest(apartmentFiltersRepository.filter)
         .map {
             it.first
                 .filterApartmentsList(it.second)
-                .mapToApartmentViewData(getUserLocation())
+                .mapToApartmentViewData(locationRepository.locationSource.value!!)
         }
 
     private val stateSource = MutableLiveData<LoadingState?>()
+    // todo - check, whether we need it
     val loadingState: LiveData<LoadingState?> = stateSource
 
-    private val cameraPositionSource = MutableLiveData<LatLng>()
+    private val cameraPositionSource = MutableLiveData(locationRepository.locationSource.value!!.toLatLng())
     val cameraPosition: LiveData<LatLng> = cameraPositionSource
 
     private val cameraZoomSource = MutableLiveData(DEFAULT_ZOOM)
@@ -66,17 +67,9 @@ class MapsViewModel : ViewModel() {
         }
     }
 
-    fun getUserLocation() = locationRepository.getLocation()
-
-    fun getLocationsSource() = locationRepository.locationSource
-
     fun startFetchingLocation() = locationRepository.connect()
 
     fun stopFetchingLocation() = locationRepository.disconnect()
-
-    fun onChangeFiltersClick() {
-
-    }
 
     fun onZoomChange(isZoomIn: Boolean) {
         val currentZoom = cameraZoomSource.value!!
@@ -96,6 +89,9 @@ class MapsViewModel : ViewModel() {
         val data = apartments.value!![cardPosition]
         cameraPositionSource.value = LatLng(data.latitude, data.longitude)
     }
+
+    fun onMapMarkerClick(apartmentId: Int): Int =
+        apartments.value!!.indexOfFirst { it.id == apartmentId }
 
     private fun List<Apartment>.filterApartmentsList(filter: ApartmentFilter) =
         filter {
@@ -120,3 +116,5 @@ private fun Apartment.toApartmentViewData(userLocation: Location): ApartmentView
 
     return ApartmentViewData(id, bedrooms, name, distanceToUserKm, latitude, longitude)
 }
+
+private fun Location.toLatLng() = LatLng(latitude, longitude)

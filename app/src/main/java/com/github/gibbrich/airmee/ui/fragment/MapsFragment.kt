@@ -1,4 +1,4 @@
-package com.github.gibbrich.airmee
+package com.github.gibbrich.airmee.ui.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -16,6 +16,7 @@ import android.content.pm.PackageManager
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.gibbrich.airmee.R
 import com.github.gibbrich.airmee.core.checkLocationPermission
 import com.github.gibbrich.airmee.core.getLocationPermissions
 import com.github.gibbrich.airmee.manager.INavigationManager
@@ -44,6 +45,12 @@ class MapsFragment : Fragment() {
         DI.appComponent.inject(this)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.fetchApartments()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,7 +75,7 @@ class MapsFragment : Fragment() {
         if (adapter == null) {
             adapter = ApartmentsAdapter(
                 mutableListOf(),
-                viewModel::onChangeFiltersClick,
+                navigationManager::switchToApartmentsParametersScreen,
                 navigationManager::switchToApartmentBookingScreen
             )
         }
@@ -86,7 +93,6 @@ class MapsFragment : Fragment() {
             }
         })
 
-        // todo - fix bug, related to multiple fragments open
         map_fragment_apartments_parameters_button.setOnClickListener {
             navigationManager.switchToApartmentsParametersScreen()
         }
@@ -106,15 +112,15 @@ class MapsFragment : Fragment() {
 
     private fun onMapReady(map: GoogleMap) {
         googleMap = map
+        googleMap.setOnMarkerClickListener {
+            val position = viewModel.onMapMarkerClick(it.tag as Int)
+            map_fragment_apartments_list.smoothScrollToPosition(position)
+            false
+        }
 
         viewModel.apartments.observe(this, Observer(::handleApartments))
-        viewModel.cameraPosition.observe(this, Observer(::moveCameraFocus))
         viewModel.cameraZoom.observe(this, Observer(::handleCameraZoom))
-
-        val latLng = viewModel.getUserLocation().let { LatLng(it.latitude, it.longitude) }
-        moveCameraFocus(latLng)
-
-        viewModel.fetchApartments()
+        viewModel.cameraPosition.observe(this, Observer(::moveCameraFocus))
 
         activity?.let {
             if (checkLocationPermission(it)) {
@@ -181,8 +187,14 @@ class MapsFragment : Fragment() {
         googleMap.clear()
 
         apartments
-            .map(ApartmentViewData::toMarkerOptions)
-            .forEach { googleMap.addMarker(it) }
+            .associate { it.id to it.toMarkerOptions() }
+            .forEach { entry ->
+                googleMap
+                    .addMarker(entry.value)
+                    .also {
+                        it.tag = entry.key
+                    }
+            }
     }
 
     private fun getLocationPermissionIfNeed() {

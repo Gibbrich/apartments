@@ -1,9 +1,9 @@
-package com.github.gibbrich.airmee
+package com.github.gibbrich.airmee.viewModel
 
 import androidx.lifecycle.*
+import com.github.gibbrich.airmee.R
 import com.github.gibbrich.airmee.core.model.BookingRange
 import com.github.gibbrich.airmee.core.manager.ResourceManager
-import com.github.gibbrich.airmee.core.model.Apartment
 import com.github.gibbrich.airmee.core.repository.ApartmentsRepository
 import com.github.gibbrich.airmee.di.DI
 import java.text.SimpleDateFormat

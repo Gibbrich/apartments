@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:background="@android:color/white"
-    tools:context=".ApartmentParametersFragment">
+    tools:context=".ui.fragment.ApartmentParametersFragment">
 
     <TextView
         android:id="@+id/apartment_parameters_rooms_and_beds_label"

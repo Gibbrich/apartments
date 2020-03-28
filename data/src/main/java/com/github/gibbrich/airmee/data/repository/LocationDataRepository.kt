@@ -23,19 +23,18 @@ class LocationDataRepository(private val context: Context): LocationRepository {
         priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
     }
 
-    override val locationSource = MutableLiveData<Location>()
+    override val locationSource = MutableLiveData(
+        Location("").apply {
+            latitude = 59.329440
+            longitude = 18.069124
+        }
+    )
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            Log.d("LocationDataRepository", "Locations arrived: ${locationResult.locations.size}")
             val location = locationResult.locations.lastOrNull() ?: return
             locationSource.value = location
         }
-    }
-
-    override fun getLocation(): Location = Location("").apply {
-        latitude = 59.329440
-        longitude = 18.069124
     }
 
     override fun connect() {

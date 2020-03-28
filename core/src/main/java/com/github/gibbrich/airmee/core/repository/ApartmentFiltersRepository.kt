@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.github.gibbrich.airmee.core.model.ApartmentFilter
 import com.github.gibbrich.airmee.core.model.BookingRange
 
-interface ApartmentParametersRepository {
+interface ApartmentFiltersRepository {
     val filter: LiveData<ApartmentFilter>
 
     fun changeBedsQuantity(isIncrease: Boolean)
@@ -13,7 +13,7 @@ interface ApartmentParametersRepository {
     fun clearFilters()
 }
 
-class ApartmentParametersDataRepository : ApartmentParametersRepository {
+class ApartmentFiltersDataRepository : ApartmentFiltersRepository {
     override val filter = MutableLiveData(ApartmentFilter())
 
     override fun changeBedsQuantity(isIncrease: Boolean) {
