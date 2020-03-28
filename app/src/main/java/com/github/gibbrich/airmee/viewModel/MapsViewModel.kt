@@ -31,8 +31,7 @@ class MapsViewModel : ViewModel() {
         DI.appComponent.inject(this)
     }
 
-    private val apartmentsSource = MutableLiveData<List<Apartment>>(emptyList())
-    val apartments: LiveData<List<ApartmentViewData>> = apartmentsSource
+    val apartments: LiveData<List<ApartmentViewData>> = apartmentsRepository.cachedApartments
         .combineLatest(apartmentParametersRepository.filter)
         .map {
             it.first
@@ -49,24 +48,21 @@ class MapsViewModel : ViewModel() {
     private val cameraZoomSource = MutableLiveData(DEFAULT_ZOOM)
     val cameraZoom: LiveData<Float> = cameraZoomSource
 
-    fun getApartments() {
-        if (stateSource.value == LoadingState.LOADING) {
+    fun fetchApartments() {
+        val shouldFetchApartments = apartmentsRepository.cachedApartments.value?.isNotEmpty() ?: true
+        if (stateSource.value == LoadingState.LOADING || shouldFetchApartments) {
             return
         }
 
         stateSource.value = LoadingState.LOADING
         viewModelScope.launch {
-            val result = try {
-                val apartments = apartmentsRepository.fetchApartments()
+            try {
+                apartmentsRepository.fetchApartments()
                 stateSource.value = null
-                apartments
             } catch (e: Exception) {
                 e.printStackTrace()
                 stateSource.value = LoadingState.ERROR
-                emptyList<Apartment>()
             }
-
-            apartmentsSource.value = result
         }
     }
 
@@ -122,5 +118,5 @@ private fun Apartment.toApartmentViewData(userLocation: Location): ApartmentView
     distanceInMeters.longitude = longitude
     val distanceToUserKm = distanceInMeters.distanceTo(userLocation) / 1000
 
-    return ApartmentViewData(bedrooms, name, distanceToUserKm, latitude, longitude)
+    return ApartmentViewData(id, bedrooms, name, distanceToUserKm, latitude, longitude)
 }

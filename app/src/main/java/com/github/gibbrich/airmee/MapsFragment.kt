@@ -69,7 +69,7 @@ class MapsFragment : Fragment() {
             adapter = ApartmentsAdapter(
                 mutableListOf(),
                 viewModel::onChangeFiltersClick,
-                ::openApartmentBooking
+                navigationManager::switchToApartmentBookingScreen
             )
         }
 
@@ -88,14 +88,6 @@ class MapsFragment : Fragment() {
 
         // todo - fix bug, related to multiple fragments open
         map_fragment_apartments_parameters_button.setOnClickListener {
-//            fragmentManager?.beginTransaction()
-//                ?.add(
-//                    R.id.fragment_apartment_parameters,
-//                    ApartmentParametersFragment(),
-//                    "ApartmentParametersFragment"
-//                )
-//                ?.addToBackStack("ApartmentParametersFragment")
-//                ?.commit()
             navigationManager.switchToApartmentsParametersScreen()
         }
 
@@ -112,19 +104,6 @@ class MapsFragment : Fragment() {
         }
     }
 
-    // todo - fix bug, related to multiple fragments open
-    private fun openApartmentBooking() {
-//        fragmentManager?.beginTransaction()
-//            ?.add(
-//                R.id.fragment_apartment_parameters,
-//                ApartmentBookingFragment(),
-//                "ApartmentBookingFragment"
-//            )
-//            ?.addToBackStack("ApartmentBookingFragment")
-//            ?.commit()
-        navigationManager.switchToApartmentBookingScreen()
-    }
-
     private fun onMapReady(map: GoogleMap) {
         googleMap = map
 
@@ -135,7 +114,7 @@ class MapsFragment : Fragment() {
         val latLng = viewModel.getUserLocation().let { LatLng(it.latitude, it.longitude) }
         moveCameraFocus(latLng)
 
-        viewModel.getApartments()
+        viewModel.fetchApartments()
 
         activity?.let {
             if (checkLocationPermission(it)) {
@@ -195,8 +174,7 @@ class MapsFragment : Fragment() {
 
     private fun handleApartments(apartments: List<ApartmentViewData>) {
         adapter?.let {
-            it.items.clear()
-            it.items.addAll(apartments)
+            it.items = apartments.toMutableList()
             it.notifyDataSetChanged()
         }
 

@@ -6,5 +6,6 @@ interface INavigationManager {
     var navController: NavController?
 
     fun switchToApartmentsParametersScreen()
-    fun switchToApartmentBookingScreen()
+    fun switchToApartmentBookingScreen(apartmentId: Int)
+    fun exit()
 }

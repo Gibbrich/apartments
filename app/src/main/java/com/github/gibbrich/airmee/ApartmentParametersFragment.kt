@@ -9,14 +9,24 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.github.gibbrich.airmee.core.model.BookingRange
+import com.github.gibbrich.airmee.di.DI
+import com.github.gibbrich.airmee.manager.INavigationManager
 import com.github.gibbrich.airmee.utils.showDateRangePicker
 import com.github.gibbrich.airmee.viewModel.ApartmentParametersViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.android.synthetic.main.fragment_apartment_parameters.*
+import javax.inject.Inject
 
 class ApartmentParametersFragment : Fragment() {
 
+    @Inject
+    lateinit var navigationManager: INavigationManager
+
     private val viewModel: ApartmentParametersViewModel by viewModels()
+
+    init {
+        DI.appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +52,7 @@ class ApartmentParametersFragment : Fragment() {
         }
 
         apartment_parameters_show_all_variants.setOnClickListener {
-            activity?.onBackPressed()
+            navigationManager.exit()
         }
 
         apartment_parameters_clear_filters.setOnClickListener {
