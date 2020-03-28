@@ -6,4 +6,6 @@ data class Apartment(
     val name: String,
     val latitude: Double,
     val longitude: Double
-)
+) {
+    var bookingRange: BookingRange? = null
+}

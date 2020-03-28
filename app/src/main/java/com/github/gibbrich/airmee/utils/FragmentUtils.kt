@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import com.github.gibbrich.airmee.core.model.BookingRange
 import com.google.android.material.datepicker.MaterialDatePicker
 
+// todo - add constraints
 fun Fragment.showDateRangePicker(onConfirmDatesButtonClick: (BookingRange) -> Unit) {
     MaterialDatePicker.Builder
         .dateRangePicker()

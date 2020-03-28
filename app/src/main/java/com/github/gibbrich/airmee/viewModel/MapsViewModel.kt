@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.github.gibbrich.airmee.core.combineLatest
 import com.github.gibbrich.airmee.core.model.Apartment
 import com.github.gibbrich.airmee.core.model.ApartmentFilter
+import com.github.gibbrich.airmee.core.model.isNotIntersect
 import com.github.gibbrich.airmee.core.repository.ApartmentParametersRepository
 import com.github.gibbrich.airmee.core.repository.ApartmentsRepository
 import com.github.gibbrich.airmee.core.repository.LocationRepository
@@ -30,11 +31,13 @@ class MapsViewModel : ViewModel() {
         DI.appComponent.inject(this)
     }
 
-    private val apartmentsSource = MutableLiveData<List<ApartmentViewData>>(emptyList())
+    private val apartmentsSource = MutableLiveData<List<Apartment>>(emptyList())
     val apartments: LiveData<List<ApartmentViewData>> = apartmentsSource
         .combineLatest(apartmentParametersRepository.filter)
         .map {
-            filterApartmentsList(it.first, it.second)
+            it.first
+                .filterApartmentsList(it.second)
+                .mapToApartmentViewData(getUserLocation())
         }
 
     private val stateSource = MutableLiveData<LoadingState?>()
@@ -63,7 +66,7 @@ class MapsViewModel : ViewModel() {
                 emptyList<Apartment>()
             }
 
-            apartmentsSource.value = getApartmentListItems(result, getUserLocation())
+            apartmentsSource.value = result
         }
     }
 
@@ -98,27 +101,22 @@ class MapsViewModel : ViewModel() {
         cameraPositionSource.value = LatLng(data.latitude, data.longitude)
     }
 
-    private fun filterApartmentsList(
-        list: List<ApartmentViewData>,
-        filter: ApartmentFilter
-    ): List<ApartmentViewData> {
-        // todo - implement filtering by data
-        return list.filter { it.beds >= filter.beds }
-    }
+    private fun List<Apartment>.filterApartmentsList(filter: ApartmentFilter) =
+        filter {
+            it.bedrooms >= filter.beds &&
+                    it.bookingRange.isNotIntersect(filter.bookingRange)
+        }
 
-    private fun getApartmentListItems(
-        apartments: List<Apartment>,
-        userLocation: Location
-    ) = apartments
-        .map { it.toApartmentListItem(userLocation) }
-        .sortedBy(ApartmentViewData::distanceToUserKm)
+    private fun List<Apartment>.mapToApartmentViewData(userLocation: Location) =
+        map { it.toApartmentViewData(userLocation) }
+            .sortedBy(ApartmentViewData::distanceToUserKm)
 }
 
 enum class LoadingState {
     LOADING, ERROR
 }
 
-private fun Apartment.toApartmentListItem(userLocation: Location): ApartmentViewData {
+private fun Apartment.toApartmentViewData(userLocation: Location): ApartmentViewData {
     val distanceInMeters = Location("")
     distanceInMeters.latitude = latitude
     distanceInMeters.longitude = longitude
