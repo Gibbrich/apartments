@@ -58,7 +58,8 @@ class MapsFragment : Fragment() {
         if (adapter == null) {
             adapter = ApartmentsAdapter(
                 mutableListOf(),
-                viewModel::onChangeFiltersClick
+                viewModel::onChangeFiltersClick,
+                ::openApartmentBooking
             )
         }
 
@@ -98,6 +99,18 @@ class MapsFragment : Fragment() {
         map_fragment_current_position.setOnClickListener {
             viewModel.onCurrentLocationButtonClick()
         }
+    }
+
+    // todo - fix bug, related to multiple fragments open
+    private fun openApartmentBooking() {
+        fragmentManager?.beginTransaction()
+            ?.add(
+                R.id.fragment_apartment_parameters,
+                ApartmentBookingFragment(),
+                "ApartmentBookingFragment"
+            )
+            ?.addToBackStack("ApartmentBookingFragment")
+            ?.commit()
     }
 
     private fun onMapReady(map: GoogleMap) {

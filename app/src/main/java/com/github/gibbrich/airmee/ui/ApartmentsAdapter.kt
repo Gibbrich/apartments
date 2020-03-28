@@ -17,7 +17,8 @@ import kotlinx.android.synthetic.main.apartment_list_item.view.*
  */
 class ApartmentsAdapter(
     var items: MutableList<ApartmentViewData>,
-    private val onChangeFiltersClick: () -> Unit
+    private val onChangeFiltersClick: () -> Unit,
+    private val onItemClick: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private const val VIEW_TYPE_ITEM = 0
@@ -71,6 +72,9 @@ class ApartmentsAdapter(
                 )
                 holder.titleLabel.text = apartment.name
                 holder.distanceToLabel.text = context.getString(R.string.apartments_list_item_distance, apartment.distanceToUserKm)
+                holder.itemView.setOnClickListener {
+                    onItemClick.invoke()
+                }
             }
 
             else -> Unit

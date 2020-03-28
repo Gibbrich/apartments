@@ -12,4 +12,9 @@
     <string name="apartment_parameters_dates">Dates</string>
     <string name="apartment_parameters_show_apartments">Show apartments</string>
     <string name="apartment_parameters_clear_filters">Clear all</string>
+
+    <string name="apartment_booking_dates">Dates:</string>
+    <string name="apartment_booking_beds">Beds:</string>
+    <string name="apartment_booking_select_dates">Select</string>
+    <string name="apartment_booking_book">Book</string>
 </resources>
