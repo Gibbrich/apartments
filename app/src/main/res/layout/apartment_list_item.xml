@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
+    android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="10dp"
     app:cardElevation="20dp">
 
@@ -16,10 +17,11 @@
             android:id="@+id/apartment_list_item_image"
             android:layout_width="96dp"
             android:layout_height="96dp"
+            android:scaleType="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_hotel_black_24dp" />
+            app:srcCompat="@drawable/ic_broken_image_black_24dp" />
 
         <TextView
             android:id="@+id/apartment_list_item_beds_number"
@@ -27,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintStart_toEndOf="@+id/apartment_list_item_image"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="2 beds" />
@@ -37,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintStart_toEndOf="@+id/apartment_list_item_image"
             app:layout_constraintTop_toBottomOf="@+id/apartment_list_item_beds_number"
             tools:text="Airmee apt" />
@@ -46,10 +50,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="10 km from you" />
+            tools:text="10 km" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/apartment_list_item_distance"
+            app:layout_constraintEnd_toStartOf="@+id/apartment_list_item_distance"
+            app:layout_constraintTop_toTopOf="@+id/apartment_list_item_distance"
+            app:srcCompat="@drawable/ic_location_on_black_24dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

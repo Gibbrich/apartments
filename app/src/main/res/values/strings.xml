@@ -3,18 +3,20 @@
     <string name="title_activity_maps">Map</string>
 
     <string name="apartments_list_no_items">No matches</string>
-    <string name="apartments_list_change_filters">Change filters</string>
+    <string name="apartments_list_change_filters"><u>Change filters</u></string>
     <string name="apartments_list_item_beds_number">%d beds</string>
-    <string name="apartments_list_item_distance">%.1f km from you</string>
+    <string name="apartments_list_item_distance">%.1f km</string>
 
     <string name="apartment_parameters_rooms_and_beds">Rooms and Beds</string>
     <string name="apartment_parameters_beds">Beds</string>
     <string name="apartment_parameters_dates">Dates</string>
+    <string name="apartment_parameters_dates_select">Select</string>
     <string name="apartment_parameters_show_apartments">Show apartments</string>
     <string name="apartment_parameters_clear_filters">Clear all</string>
 
-    <string name="apartment_booking_dates">Dates:</string>
-    <string name="apartment_booking_beds">Beds:</string>
+    <string name="apartment_booking_dates">Dates</string>
+    <string name="apartment_booking_beds">Beds</string>
     <string name="apartment_booking_select_dates">Select</string>
     <string name="apartment_booking_book">Book</string>
+    <string name="apartment_booking_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
 </resources>

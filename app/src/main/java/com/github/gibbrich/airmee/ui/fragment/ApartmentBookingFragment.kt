@@ -10,10 +10,13 @@ import androidx.lifecycle.Observer
 import com.github.gibbrich.airmee.viewModel.ApartmentViewModel
 import com.github.gibbrich.airmee.viewModel.ApartmentViewModelFactory
 import com.github.gibbrich.airmee.R
+import com.github.gibbrich.airmee.core.model.BookingRange
 import com.github.gibbrich.airmee.di.DI
 import com.github.gibbrich.airmee.manager.INavigationManager
 import com.github.gibbrich.airmee.utils.showDateRangePicker
 import kotlinx.android.synthetic.main.apartment_booking_fragment.*
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 
@@ -60,13 +63,26 @@ class ApartmentBookingFragment : Fragment() {
         apartment_booking_name_label.text = viewModel.apartment.name
         apartment_booking_beds_quantity_label.text = viewModel.apartment.bedrooms.toString()
 
-        apartment_booking_book.setOnClickListener {
+        apartment_booking_book_button.setOnClickListener {
             viewModel.onBookButtonClick()
+            navigationManager.exit()
+        }
+
+        apartment_booking_close_button.setOnClickListener {
             navigationManager.exit()
         }
     }
 
-    private fun handleBookingRange(range: String) {
-        apartment_booking_select_dates_button.text = range
+    private fun handleBookingRange(bookingRange: BookingRange?) {
+        apartment_booking_select_dates_button.text = getRangeRepresentation(bookingRange)
+        apartment_booking_book_button.isEnabled = bookingRange != null
     }
+
+    private fun getRangeRepresentation(bookingRange: BookingRange?): String =
+        if (bookingRange == null) {
+            getString(R.string.apartment_booking_select_dates)
+        } else {
+            val formatter = SimpleDateFormat("dd MMM", Locale.getDefault())
+            "${formatter.format(Date(bookingRange.start))} - ${formatter.format(Date(bookingRange.end))}"
+        }
 }

@@ -24,7 +24,7 @@ class ApartmentFiltersDataRepository : ApartmentFiltersRepository {
             apartmentFilter.beds.dec()
         }
 
-        val result = beds.coerceAtLeast(0)
+        val result = beds.coerceAtLeast(ApartmentFilter.MIN_BEDS_QUANTITY)
 
         filter.value = apartmentFilter.copy(beds = result)
     }

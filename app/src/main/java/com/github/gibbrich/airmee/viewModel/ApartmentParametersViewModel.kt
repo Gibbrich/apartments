@@ -36,7 +36,7 @@ class ApartmentParametersViewModel : ViewModel() {
     fun onClearFiltersButtonClick() = apartmentFiltersRepository.clearFilters()
 
     private fun getRangeRepresentation(bookingRange: BookingRange?): String = if (bookingRange == null) {
-        resourceManager.getString(R.string.apartment_parameters_dates)
+        resourceManager.getString(R.string.apartment_parameters_dates_select)
     } else {
         val formatter = SimpleDateFormat("dd MMM", Locale.getDefault())
         "${formatter.format(Date(bookingRange.start))} - ${formatter.format(Date(bookingRange.end))}"

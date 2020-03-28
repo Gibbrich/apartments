@@ -23,7 +23,7 @@ class ApartmentViewModel(private val apartmentId: Int) : ViewModel() {
     }
 
     private val bookingRangeSource = MutableLiveData<BookingRange>(null)
-    val bookingRange: LiveData<String> = bookingRangeSource.map(::getRangeRepresentation)
+    val bookingRange: LiveData<BookingRange> = bookingRangeSource
 
     val apartment by lazy {
         apartmentsRepository
@@ -39,14 +39,6 @@ class ApartmentViewModel(private val apartmentId: Int) : ViewModel() {
     fun onBookButtonClick() {
         apartmentsRepository.bookApartment(apartmentId, bookingRangeSource.value!!)
     }
-
-    private fun getRangeRepresentation(bookingRange: BookingRange?): String =
-        if (bookingRange == null) {
-            resourceManager.getString(R.string.apartment_booking_select_dates)
-        } else {
-            val formatter = SimpleDateFormat("dd MMM", Locale.getDefault())
-            "${formatter.format(Date(bookingRange.start))} - ${formatter.format(Date(bookingRange.end))}"
-        }
 }
 
 class ApartmentViewModelFactory(private val apartmentId: Int) : ViewModelProvider.Factory {

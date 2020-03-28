@@ -86,13 +86,19 @@ class MapsViewModel : ViewModel() {
     }
 
     fun onScrollEnd(cardPosition: Int) {
-        val data = apartments.value!![cardPosition]
+        val adapterItems = apartments.value!!
+        if (adapterItems.isEmpty()) {
+            return
+        }
+        val data = adapterItems[cardPosition]
         cameraPositionSource.value = LatLng(data.latitude, data.longitude)
     }
 
     fun onMapMarkerClick(apartmentId: Int): Int =
         apartments.value!!.indexOfFirst { it.id == apartmentId }
 
+    // todo - add in description, that filtering by dates will work for booked apts,
+    //  only if dates filter will work
     private fun List<Apartment>.filterApartmentsList(filter: ApartmentFilter) =
         filter {
             it.bedrooms >= filter.beds &&

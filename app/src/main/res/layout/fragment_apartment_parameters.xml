@@ -4,43 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     android:background="@android:color/white"
+    android:padding="16dp"
     tools:context=".ui.fragment.ApartmentParametersFragment">
+
+    <ImageButton
+        android:id="@+id/apartment_booking_close_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/button_ripple"
+        android:src="@drawable/ic_close_black_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/apartment_parameters_rooms_and_beds_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="@string/apartment_parameters_rooms_and_beds"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/apartment_booking_close_button" />
 
     <TextView
         android:id="@+id/apartment_parameters_beds_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
         android:text="@string/apartment_parameters_beds"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Black"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/apartment_parameters_rooms_and_beds_label" />
 
     <ImageView
         android:id="@+id/apartment_parameters_increase_beds_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:src="@drawable/ic_add_circle_outline_black_24dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/button_ripple"
+        android:scaleType="center"
+        android:src="@drawable/ic_add_black_24dp"
         app:layout_constraintBottom_toBottomOf="@+id/apartment_parameters_beds_number_label"
-        app:layout_constraintStart_toEndOf="@+id/apartment_parameters_beds_number_label"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/apartment_parameters_beds_number_label" />
 
     <ImageView
         android:id="@+id/apartment_parameters_decrease_beds_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginEnd="8dp"
-        android:src="@drawable/ic_remove_circle_outline_black_24dp"
+        android:background="@drawable/button_ripple"
+        android:scaleType="center"
+        android:src="@drawable/ic_remove_black_24dp"
         app:layout_constraintBottom_toBottomOf="@+id/apartment_parameters_beds_number_label"
         app:layout_constraintEnd_toStartOf="@+id/apartment_parameters_beds_number_label"
         app:layout_constraintTop_toTopOf="@+id/apartment_parameters_beds_number_label" />
@@ -49,11 +65,12 @@
         android:id="@+id/apartment_parameters_beds_number_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:text="TextView"
+        android:layout_marginEnd="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Black"
         app:layout_constraintBottom_toBottomOf="@+id/apartment_parameters_beds_label"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/apartment_parameters_beds_label" />
+        app:layout_constraintEnd_toStartOf="@+id/apartment_parameters_increase_beds_count"
+        app:layout_constraintTop_toTopOf="@+id/apartment_parameters_beds_label"
+        tools:text="1" />
 
     <View
         android:id="@+id/divider2"
@@ -69,20 +86,30 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
         android:text="@string/apartment_parameters_dates"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Black"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
-    <Button
+    <TextView
         android:id="@+id/apartment_parameters_pick_dates_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        android:background="@drawable/pill_button_ripple"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="@+id/apartment_parameters_increase_beds_count"
+        app:layout_constraintTop_toTopOf="@+id/textView4"
+        tools:text="Select" />
 
     <Button
         android:id="@+id/apartment_parameters_show_all_variants"
@@ -94,10 +121,29 @@
 
     <Button
         android:id="@+id/apartment_parameters_clear_filters"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/apartment_parameters_clear_filters"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_hotel_black_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/apartment_parameters_beds_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/apartment_parameters_beds_label" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_date_range_black_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,6 +16,7 @@ import com.github.gibbrich.airmee.viewModel.ApartmentParametersViewModel
 import kotlinx.android.synthetic.main.fragment_apartment_parameters.*
 import javax.inject.Inject
 
+// todo - add click debounce
 class ApartmentParametersFragment : Fragment() {
 
     @Inject
@@ -56,6 +57,10 @@ class ApartmentParametersFragment : Fragment() {
 
         apartment_parameters_clear_filters.setOnClickListener {
             viewModel.onClearFiltersButtonClick()
+        }
+
+        apartment_booking_close_button.setOnClickListener {
+            navigationManager.exit()
         }
     }
 
