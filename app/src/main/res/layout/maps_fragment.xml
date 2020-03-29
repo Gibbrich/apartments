@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@android:color/white"
+    android:id="@+id/map_fragment_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context=".ui.fragment.MapsFragment">
 
     <fragment
@@ -17,11 +18,13 @@
         android:id="@+id/map_fragment_apartments_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/map"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:itemCount="1"
-        tools:listitem="@layout/apartment_list_item" />
+        tools:listitem="@layout/apartment_list_item"
+        tools:visibility="visible" />
 
     <ImageButton
         android:id="@+id/map_fragment_apartments_parameters_button"
@@ -69,10 +72,11 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/button_ripple"
         android:elevation="20dp"
-        android:visibility="gone"
         android:src="@drawable/ic_near_me_black_24dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/map"
-        app:layout_constraintTop_toBottomOf="@+id/map_fragment_zoom_out" />
+        app:layout_constraintTop_toBottomOf="@+id/map_fragment_zoom_out"
+        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/fragment_apartment_parameters"

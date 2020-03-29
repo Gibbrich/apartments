@@ -1,4 +1,4 @@
-package com.github.gibbrich.airmee.ui
+package com.github.gibbrich.airmee.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.gibbrich.airmee.R
-import com.github.gibbrich.airmee.core.isLocationPermissionGranted
+import com.github.gibbrich.airmee.core.utils.isLocationPermissionGranted
 import com.github.gibbrich.airmee.model.ApartmentViewData
 import kotlinx.android.synthetic.main.apartment_list_empty.view.*
 import kotlinx.android.synthetic.main.apartment_list_item.view.*
@@ -88,7 +88,10 @@ class ApartmentsAdapter(
                 // which is also used to calculate distance. To handle this case in user-friendly manner,
                 // we simply hide distance to label. Not very pretty workaround, but correct
                 // (from architecture POV) implementation will raise solution complexity a lot.
-                val distanceToVisibility = if (isLocationPermissionGranted(holder.itemView.context)) {
+                val distanceToVisibility = if (isLocationPermissionGranted(
+                        holder.itemView.context
+                    )
+                ) {
                     View.VISIBLE
                 } else {
                     View.GONE

@@ -5,4 +5,6 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorPrimaryText">#ffffff</color>
     <color name="colorAccent">#000000</color>
+
+    <color name="snack_background_color">#EA394E</color>
 </resources>

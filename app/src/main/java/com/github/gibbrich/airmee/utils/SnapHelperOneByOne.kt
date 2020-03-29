@@ -1,4 +1,4 @@
-package com.github.gibbrich.airmee.ui.utils
+package com.github.gibbrich.airmee.utils
 
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView

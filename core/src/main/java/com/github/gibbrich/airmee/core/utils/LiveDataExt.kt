@@ -1,4 +1,4 @@
-package com.github.gibbrich.airmee.core
+package com.github.gibbrich.airmee.core.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData

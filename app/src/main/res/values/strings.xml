@@ -2,6 +2,9 @@
     <string name="app_name">Airmee</string>
     <string name="title_activity_maps">Map</string>
 
+    <string name="apartments_list_error">Error occurred during apartments load</string>
+    <string name="apartments_list_retry">Retry</string>
+
     <string name="apartments_list_no_items">No matches</string>
     <string name="apartments_list_change_filters"><u>Change filters</u></string>
     <string name="apartments_list_item_beds_number">%d beds</string>

@@ -2,7 +2,7 @@ package com.github.gibbrich.airmee.viewModel
 
 import android.location.Location
 import androidx.lifecycle.*
-import com.github.gibbrich.airmee.core.combineLatest
+import com.github.gibbrich.airmee.core.utils.combineLatest
 import com.github.gibbrich.airmee.core.model.Apartment
 import com.github.gibbrich.airmee.core.model.ApartmentFilter
 import com.github.gibbrich.airmee.core.model.isNotIntersect
@@ -37,29 +37,26 @@ class MapsViewModel : ViewModel() {
                 .mapToApartmentViewData(locationRepository.locationSource.value!!)
         }
 
-    private val stateSource = MutableLiveData<LoadingState?>()
-    // todo - check, whether we need it
-    val loadingState: LiveData<LoadingState?> = stateSource
+    private val errorSource = MutableLiveData(false)
+    val error: LiveData<Boolean> = errorSource
 
     private val cameraPropertiesSource = MutableLiveData(
         CameraProperties(locationRepository.locationSource.value!!.toLatLng())
     )
     val cameraProperties: LiveData<CameraProperties> = cameraPropertiesSource
 
-    fun fetchApartments() {
+    fun fetchApartmentsIfNeed() {
         val shouldFetchApartments = apartmentsRepository.cachedApartments.value?.isNotEmpty() ?: true
-        if (stateSource.value == LoadingState.LOADING || shouldFetchApartments) {
+        if (shouldFetchApartments.not()) {
             return
         }
 
-        stateSource.value = LoadingState.LOADING
         viewModelScope.launch {
             try {
                 apartmentsRepository.fetchApartments()
-                stateSource.value = null
             } catch (e: Exception) {
                 e.printStackTrace()
-                stateSource.value = LoadingState.ERROR
+                errorSource.value = true
             }
         }
     }
@@ -84,10 +81,6 @@ class MapsViewModel : ViewModel() {
         cameraPropertiesSource.value = getNewCameraProperties(newLatLng = currentLocation)
     }
 
-    fun resetCameraMovement() {
-        cameraPropertiesSource.value = getNewCameraProperties(shouldMove = false)
-    }
-
     fun onScrollEnd(cardPosition: Int) {
         val adapterItems = apartments.value!!
         if (adapterItems.isEmpty()) {
@@ -106,6 +99,20 @@ class MapsViewModel : ViewModel() {
 
     fun onMapMarkerClick(apartmentId: Int): Int =
         apartments.value!!.indexOfFirst { it.id == apartmentId }
+
+    fun onRetryButtonClick() {
+        errorSource.value = false
+        fetchApartmentsIfNeed()
+    }
+
+    /**
+     * After navigation to another screens and returning back
+     * we don't want camera change it's location and show error view
+     */
+    fun onDestroyView() {
+        cameraPropertiesSource.value = getNewCameraProperties(shouldMove = false)
+        errorSource.value = false
+    }
 
     // todo - add in description, that filtering by dates will work for booked apts,
     //  only if dates filter will work
@@ -129,10 +136,6 @@ class MapsViewModel : ViewModel() {
         val zoom = newZoom ?: currentProperties.zoom
         return CameraProperties(latLng, zoom, shouldMove)
     }
-}
-
-enum class LoadingState {
-    LOADING, ERROR
 }
 
 private fun Apartment.toApartmentViewData(userLocation: Location): ApartmentViewData {

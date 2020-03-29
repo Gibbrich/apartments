@@ -18,7 +18,7 @@ class ApartmentsDataRepository(
     private val api: Api,
     private val db: AppDatabase
 ) : ApartmentsRepository {
-    override val cachedApartments = MutableLiveData<List<Apartment>>(mutableListOf())
+    override val cachedApartments = MutableLiveData<List<Apartment>>()
 
     override suspend fun fetchApartments() {
         cachedApartments.value = api.getApartments().map(ApartmentsConverter::fromNetwork)

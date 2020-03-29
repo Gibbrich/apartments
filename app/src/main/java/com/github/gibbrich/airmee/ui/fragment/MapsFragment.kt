@@ -16,16 +16,18 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.gibbrich.airmee.R
-import com.github.gibbrich.airmee.core.isLocationPermissionGranted
-import com.github.gibbrich.airmee.core.getLocationPermissions
+import com.github.gibbrich.airmee.core.utils.isLocationPermissionGranted
+import com.github.gibbrich.airmee.core.utils.getLocationPermissions
 import com.github.gibbrich.airmee.manager.INavigationManager
 import com.github.gibbrich.airmee.di.DI
 import com.github.gibbrich.airmee.model.ApartmentViewData
 import com.github.gibbrich.airmee.model.CameraProperties
-import com.github.gibbrich.airmee.ui.ApartmentsAdapter
-import com.github.gibbrich.airmee.ui.utils.SnapHelperOneByOne
+import com.github.gibbrich.airmee.adapter.ApartmentsAdapter
+import com.github.gibbrich.airmee.utils.SnapHelperOneByOne
 import com.github.gibbrich.airmee.utils.redraw
+import com.github.gibbrich.airmee.utils.getErrorView
 import com.github.gibbrich.airmee.viewModel.MapsViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.maps_fragment.*
 import javax.inject.Inject
 
@@ -41,15 +43,10 @@ class MapsFragment : Fragment() {
     private lateinit var googleMap: GoogleMap
 
     private var adapter: ApartmentsAdapter? = null
+    private var errorView: Snackbar? = null
 
     init {
         DI.appComponent.inject(this)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel.fetchApartments()
     }
 
     override fun onCreateView(
@@ -59,6 +56,9 @@ class MapsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewModel.error.observe(viewLifecycleOwner, Observer(::handleErrorSignal))
+        viewModel.fetchApartmentsIfNeed()
 
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -113,9 +113,8 @@ class MapsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        // after navigation to another screens and returning back
-        // we don't want camera change it's location
-        viewModel.resetCameraMovement()
+        viewModel.onDestroyView()
+        errorView?.dismiss()
     }
 
     private fun onMapReady(map: GoogleMap) {
@@ -189,6 +188,8 @@ class MapsFragment : Fragment() {
     }
 
     private fun handleApartments(apartments: List<ApartmentViewData>) {
+        map_fragment_apartments_list.visibility = View.VISIBLE
+
         adapter?.let {
             it.items = apartments.toMutableList()
             it.notifyDataSetChanged()
@@ -205,6 +206,22 @@ class MapsFragment : Fragment() {
                         it.tag = entry.key
                     }
             }
+    }
+
+    private fun handleErrorSignal(isError: Boolean) {
+        if (isError) {
+            errorView = getErrorView(
+                map_fragment_root,
+                Snackbar.LENGTH_INDEFINITE,
+                R.string.apartments_list_error,
+                R.string.apartments_list_retry,
+                viewModel::onRetryButtonClick
+            ).also {
+                it.show()
+            }
+        } else {
+            errorView?.dismiss()
+        }
     }
 
     private fun updateLocationUI(isLocationPermissionGranted: Boolean) {

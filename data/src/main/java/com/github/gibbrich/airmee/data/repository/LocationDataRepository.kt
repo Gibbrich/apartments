@@ -4,7 +4,7 @@ import android.content.Context
 import android.location.Location
 import android.os.Looper
 import androidx.lifecycle.MutableLiveData
-import com.github.gibbrich.airmee.core.isLocationPermissionGranted
+import com.github.gibbrich.airmee.core.utils.isLocationPermissionGranted
 import com.github.gibbrich.airmee.core.repository.LocationRepository
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
