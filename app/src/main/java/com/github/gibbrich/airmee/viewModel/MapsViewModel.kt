@@ -98,6 +98,12 @@ class MapsViewModel : ViewModel() {
         cameraPropertiesSource.value = getNewCameraProperties(newLatLng = latLng)
     }
 
+    fun onApartmentLongClick(apartmentId: Int) {
+        val data = apartments.value!!.find { it.id == apartmentId }!!
+        val latLng = LatLng(data.latitude, data.longitude)
+        cameraPropertiesSource.value = getNewCameraProperties(newLatLng = latLng)
+    }
+
     fun onMapMarkerClick(apartmentId: Int): Int =
         apartments.value!!.indexOfFirst { it.id == apartmentId }
 

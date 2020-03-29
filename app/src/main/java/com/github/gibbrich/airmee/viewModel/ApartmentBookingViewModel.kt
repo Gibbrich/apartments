@@ -1,13 +1,13 @@
 package com.github.gibbrich.airmee.viewModel
 
-import androidx.lifecycle.*
-import com.github.gibbrich.airmee.R
-import com.github.gibbrich.airmee.core.model.BookingRange
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.github.gibbrich.airmee.core.manager.ResourceManager
+import com.github.gibbrich.airmee.core.model.BookingRange
 import com.github.gibbrich.airmee.core.repository.ApartmentsRepository
 import com.github.gibbrich.airmee.di.DI
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 class ApartmentViewModel(private val apartmentId: Int) : ViewModel() {

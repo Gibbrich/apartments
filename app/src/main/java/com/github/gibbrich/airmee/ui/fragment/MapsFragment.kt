@@ -77,7 +77,8 @@ class MapsFragment : Fragment() {
             adapter = ApartmentsAdapter(
                 mutableListOf(),
                 navigationManager::switchToApartmentsParametersScreen,
-                navigationManager::switchToApartmentBookingScreen
+                navigationManager::switchToApartmentBookingScreen,
+                viewModel::onApartmentLongClick
             )
         }
 
