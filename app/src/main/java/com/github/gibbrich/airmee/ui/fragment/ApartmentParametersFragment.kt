@@ -11,12 +11,12 @@ import androidx.lifecycle.Observer
 import com.github.gibbrich.airmee.R
 import com.github.gibbrich.airmee.di.DI
 import com.github.gibbrich.airmee.manager.INavigationManager
+import com.github.gibbrich.airmee.utils.DebouncedOnClickListener
 import com.github.gibbrich.airmee.utils.showDateRangePicker
 import com.github.gibbrich.airmee.viewModel.ApartmentParametersViewModel
 import kotlinx.android.synthetic.main.fragment_apartment_parameters.*
 import javax.inject.Inject
 
-// todo - add click debounce
 class ApartmentParametersFragment : Fragment() {
 
     @Inject
@@ -39,9 +39,9 @@ class ApartmentParametersFragment : Fragment() {
         viewModel.dates.observe(viewLifecycleOwner, Observer(::handleDates))
         viewModel.beds.observe(viewLifecycleOwner, Observer(::handleBedsCount))
 
-        apartment_parameters_pick_dates_button.setOnClickListener {
+        apartment_parameters_pick_dates_button.setOnClickListener(DebouncedOnClickListener(500) {
             showDateRangePicker(viewModel::onConfirmDatesButtonClick)
-        }
+        })
 
         apartment_parameters_decrease_beds_count.setOnClickListener {
             viewModel.onChangeBedButtonClick(false)

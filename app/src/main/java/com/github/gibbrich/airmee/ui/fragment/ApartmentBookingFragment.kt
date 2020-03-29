@@ -15,6 +15,7 @@ import com.github.gibbrich.airmee.R
 import com.github.gibbrich.airmee.core.model.BookingRange
 import com.github.gibbrich.airmee.di.DI
 import com.github.gibbrich.airmee.manager.INavigationManager
+import com.github.gibbrich.airmee.utils.DebouncedOnClickListener
 import com.github.gibbrich.airmee.utils.showDateRangePicker
 import com.github.gibbrich.airmee.viewModel.MapsViewModel
 import kotlinx.android.synthetic.main.apartment_booking_fragment.*
@@ -59,9 +60,9 @@ class ApartmentBookingFragment : Fragment() {
 
         viewModel.bookingRange.observe(viewLifecycleOwner, Observer(::handleBookingRange))
 
-        apartment_booking_select_dates_button.setOnClickListener {
+        apartment_booking_select_dates_button.setOnClickListener(DebouncedOnClickListener(500) {
             showDateRangePicker(viewModel::onConfirmDatesButtonClick)
-        }
+        })
 
         apartment_booking_name_label.text = viewModel.apartment.name
         apartment_booking_beds_quantity_label.text = viewModel.apartment.bedrooms.toString()
