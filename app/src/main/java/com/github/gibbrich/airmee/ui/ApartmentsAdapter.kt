@@ -3,9 +3,11 @@ package com.github.gibbrich.airmee.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.gibbrich.airmee.R
+import com.github.gibbrich.airmee.core.isLocationPermissionGranted
 import com.github.gibbrich.airmee.model.ApartmentViewData
 import kotlinx.android.synthetic.main.apartment_list_empty.view.*
 import kotlinx.android.synthetic.main.apartment_list_item.view.*
@@ -38,7 +40,8 @@ class ApartmentsAdapter(
                     view,
                     view.apartment_list_item_beds_number,
                     view.apartment_list_item_title,
-                    view.apartment_list_item_distance
+                    view.apartment_list_item_distance_lable,
+                    view.apartment_list_item_distance_icon
                 )
             }
 
@@ -79,6 +82,20 @@ class ApartmentsAdapter(
                     onLongItemClick.invoke(apartment.id)
                     true
                 }
+
+                // if the user did not provide location permission, we won't be able to
+                // say, how long it from current apartment. But we always has at least default location,
+                // which is also used to calculate distance. To handle this case in user-friendly manner,
+                // we simply hide distance to label. Not very pretty workaround, but correct
+                // (from architecture POV) implementation will raise solution complexity a lot.
+                val distanceToVisibility = if (isLocationPermissionGranted(holder.itemView.context)) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+
+                holder.distanceToLabel.visibility = distanceToVisibility
+                holder.distatnceToIcon.visibility = distanceToVisibility
             }
 
             else -> Unit
@@ -97,7 +114,8 @@ private class ApartmentViewHolder(
     view: View,
     val bedsNumberLabel: TextView,
     val titleLabel: TextView,
-    val distanceToLabel: TextView
+    val distanceToLabel: TextView,
+    val distatnceToIcon: ImageView
 ) : RecyclerView.ViewHolder(view)
 
 private class FooterViewHolder(

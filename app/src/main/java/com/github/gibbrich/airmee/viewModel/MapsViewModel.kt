@@ -75,7 +75,7 @@ class MapsViewModel : ViewModel() {
         } else {
             cameraProperties.zoom.dec()
         }
-        cameraPropertiesSource.value = getNewCameraProperties(newZoom = zoom)
+        cameraPropertiesSource.value = getNewCameraProperties(newZoom = zoom, shouldMove = false)
     }
 
     fun onCurrentLocationButtonClick() {
@@ -85,7 +85,7 @@ class MapsViewModel : ViewModel() {
     }
 
     fun resetCameraMovement() {
-        cameraPropertiesSource.value = getNewCameraProperties(shouldAnimate = false)
+        cameraPropertiesSource.value = getNewCameraProperties(shouldMove = false)
     }
 
     fun onScrollEnd(cardPosition: Int) {
@@ -122,12 +122,12 @@ class MapsViewModel : ViewModel() {
     private fun getNewCameraProperties(
         newLatLng: LatLng? = null,
         newZoom: Float? = null,
-        shouldAnimate: Boolean = true
+        shouldMove: Boolean = true
     ): CameraProperties {
         val currentProperties = cameraPropertiesSource.value!!
         val latLng = newLatLng ?: currentProperties.latLng
         val zoom = newZoom ?: currentProperties.zoom
-        return CameraProperties(latLng, zoom, shouldAnimate)
+        return CameraProperties(latLng, zoom, shouldMove)
     }
 }
 

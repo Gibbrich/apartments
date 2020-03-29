@@ -11,13 +11,12 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import androidx.core.app.ActivityCompat.requestPermissions
 import android.content.pm.PackageManager
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.gibbrich.airmee.R
-import com.github.gibbrich.airmee.core.checkLocationPermission
+import com.github.gibbrich.airmee.core.isLocationPermissionGranted
 import com.github.gibbrich.airmee.core.getLocationPermissions
 import com.github.gibbrich.airmee.manager.INavigationManager
 import com.github.gibbrich.airmee.di.DI
@@ -25,11 +24,11 @@ import com.github.gibbrich.airmee.model.ApartmentViewData
 import com.github.gibbrich.airmee.model.CameraProperties
 import com.github.gibbrich.airmee.ui.ApartmentsAdapter
 import com.github.gibbrich.airmee.ui.utils.SnapHelperOneByOne
+import com.github.gibbrich.airmee.utils.redraw
 import com.github.gibbrich.airmee.viewModel.MapsViewModel
 import kotlinx.android.synthetic.main.maps_fragment.*
 import javax.inject.Inject
 
-// todo - on pin on map click, change recycler item
 class MapsFragment : Fragment() {
     companion object {
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 42
@@ -40,6 +39,7 @@ class MapsFragment : Fragment() {
 
     private val viewModel: MapsViewModel by activityViewModels()
     private lateinit var googleMap: GoogleMap
+
     private var adapter: ApartmentsAdapter? = null
 
     init {
@@ -63,8 +63,6 @@ class MapsFragment : Fragment() {
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this::onMapReady)
-
-        getLocationPermissionIfNeed()
 
         val layoutManager = LinearLayoutManager(
             activity,
@@ -122,7 +120,8 @@ class MapsFragment : Fragment() {
 
     private fun onMapReady(map: GoogleMap) {
         googleMap = map
-        googleMap.setOnMarkerClickListener {
+        map.uiSettings.isMyLocationButtonEnabled = false
+        map.setOnMarkerClickListener {
             val position = viewModel.onMapMarkerClick(it.tag as Int)
             map_fragment_apartments_list.smoothScrollToPosition(position)
             false
@@ -132,11 +131,10 @@ class MapsFragment : Fragment() {
         viewModel.cameraProperties.observe(viewLifecycleOwner, Observer(::handleCameraPropertiesSource))
 
         activity?.let {
-            if (checkLocationPermission(it)) {
+            if (isLocationPermissionGranted(it)) {
                 updateLocationUI(true)
             } else {
                 requestPermissions(
-                    it,
                     getLocationPermissions(),
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
                 )
@@ -145,22 +143,22 @@ class MapsFragment : Fragment() {
     }
 
     private fun handleCameraPropertiesSource(cameraProperties: CameraProperties) {
-        if (cameraProperties.shouldAnimate.not()) {
-            return
-        }
-
-        googleMap.animateCamera(
+        val cameraUpdate = if (cameraProperties.shouldMove) {
             CameraUpdateFactory.newLatLngZoom(
                 cameraProperties.latLng,
                 cameraProperties.zoom
             )
-        )
+        } else {
+            CameraUpdateFactory.zoomTo(cameraProperties.zoom)
+        }
+
+        googleMap.animateCamera(cameraUpdate)
     }
 
     override fun onResume() {
         super.onResume()
 
-        if (checkLocationPermission(activity!!)) {
+        if (isLocationPermissionGranted(activity!!)) {
             viewModel.startFetchingLocation()
         }
     }
@@ -168,7 +166,7 @@ class MapsFragment : Fragment() {
     override fun onPause() {
         super.onPause()
 
-        if (checkLocationPermission(activity!!)) {
+        if (isLocationPermissionGranted(activity!!)) {
             viewModel.stopFetchingLocation()
         }
     }
@@ -209,21 +207,16 @@ class MapsFragment : Fragment() {
             }
     }
 
-    private fun getLocationPermissionIfNeed() {
-        val activity = activity ?: return
-        if (checkLocationPermission(activity).not()) {
-            requestPermissions(
-                activity,
-                getLocationPermissions(),
-                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
-            )
-        }
-    }
-
     private fun updateLocationUI(isLocationPermissionGranted: Boolean) {
-        val mMap = googleMap
-        mMap.isMyLocationEnabled = isLocationPermissionGranted
-        mMap.uiSettings.isMyLocationButtonEnabled = false
+        googleMap.isMyLocationEnabled = isLocationPermissionGranted
+        map_fragment_current_position.visibility =
+            if (isLocationPermissionGranted) View.VISIBLE else View.GONE
+
+        if (isLocationPermissionGranted) {
+            // apartments card include distance to user. If there is no location permission,
+            // we hide it. Once we get it, we should display it, so we trigger recycler redraw.
+            map_fragment_apartments_list.redraw()
+        }
     }
 }
 

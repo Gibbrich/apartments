@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 
-fun checkLocationPermission(context: Context): Boolean =
+fun isLocationPermissionGranted(context: Context): Boolean =
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
             isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION) ||
             isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION)
