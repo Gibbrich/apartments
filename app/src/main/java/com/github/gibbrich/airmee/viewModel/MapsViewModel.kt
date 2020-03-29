@@ -136,7 +136,7 @@ class MapsViewModel : ViewModel() {
     }
 }
 
-private fun Apartment.toApartmentViewData(userLocation: Location): ApartmentViewData {
+fun Apartment.toApartmentViewData(userLocation: Location): ApartmentViewData {
     val distanceInMeters = Location("")
     distanceInMeters.latitude = latitude
     distanceInMeters.longitude = longitude

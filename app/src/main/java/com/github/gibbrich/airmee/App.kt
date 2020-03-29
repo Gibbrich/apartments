@@ -7,7 +7,7 @@ import com.github.gibbrich.airmee.di.DaggerAppComponent
 import com.github.gibbrich.airmee.core.di.DI as CoreDI
 import com.github.gibbrich.airmee.data.di.DI as DataDI
 
-class App: Application() {
+open class App: Application() {
     override fun onCreate() {
         super.onCreate()
 

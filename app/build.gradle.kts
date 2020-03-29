@@ -9,7 +9,7 @@ android {
     configureAndroidModule()
     defaultConfig {
         applicationId = "com.github.gibbrich.airmee"
-//        testInstrumentationRunner = "com.github.gibbrich.airmee.MockTestRunner"
+        testInstrumentationRunner = "com.github.gibbrich.airmee.MockTestRunner"
     }
 }
 

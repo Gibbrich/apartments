@@ -14,7 +14,7 @@ import com.google.android.gms.location.LocationServices
 
 class LocationDataRepository(private val context: Context) : LocationRepository {
     companion object {
-        private val DEFAULT_LOCATION = Location("").apply {
+        val DEFAULT_LOCATION = Location("").apply {
             latitude = 59.329440
             longitude = 18.069124
         }
