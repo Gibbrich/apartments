@@ -26,4 +26,6 @@ dependencies {
 
     api(Deps.core.dagger)
     kapt(Deps.core.daggerCompiler)
+
+    testImplementation(Deps.test.junit)
 }

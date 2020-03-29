@@ -5,7 +5,6 @@ data class BookingRange(
     val end: Long
 )
 
-// todo - write tests
 fun BookingRange?.isNotIntersect(other: BookingRange?): Boolean =
     this == null
             || other == null
