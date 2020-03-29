@@ -114,8 +114,6 @@ class MapsViewModel : ViewModel() {
         errorSource.value = false
     }
 
-    // todo - add in description, that filtering by dates will work for booked apts,
-    //  only if dates filter will work
     private fun List<Apartment>.filterApartmentsList(filter: ApartmentFilter) =
         filter {
             it.bedrooms >= filter.beds &&

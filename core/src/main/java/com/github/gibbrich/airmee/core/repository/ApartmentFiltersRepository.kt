@@ -5,6 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import com.github.gibbrich.airmee.core.model.ApartmentFilter
 import com.github.gibbrich.airmee.core.model.BookingRange
 
+/**
+ * Apartment list filtering by date will be performed only if [ApartmentFilter.bookingRange] in
+ * [ApartmentFiltersRepository] is not null.
+ */
 interface ApartmentFiltersRepository {
     val filter: LiveData<ApartmentFilter>
 
