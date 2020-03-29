@@ -11,14 +11,12 @@ import com.github.gibbrich.airmee.core.repository.ApartmentsRepository
 import com.github.gibbrich.airmee.core.repository.LocationRepository
 import com.github.gibbrich.airmee.di.DI
 import com.github.gibbrich.airmee.model.ApartmentViewData
+import com.github.gibbrich.airmee.model.CameraProperties
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MapsViewModel : ViewModel() {
-    companion object {
-        private const val DEFAULT_ZOOM = 15f
-    }
 
     @Inject
     internal lateinit var apartmentsRepository: ApartmentsRepository
@@ -43,11 +41,10 @@ class MapsViewModel : ViewModel() {
     // todo - check, whether we need it
     val loadingState: LiveData<LoadingState?> = stateSource
 
-    private val cameraPositionSource = MutableLiveData(locationRepository.locationSource.value!!.toLatLng())
-    val cameraPosition: LiveData<LatLng> = cameraPositionSource
-
-    private val cameraZoomSource = MutableLiveData(DEFAULT_ZOOM)
-    val cameraZoom: LiveData<Float> = cameraZoomSource
+    private val cameraPropertiesSource = MutableLiveData(
+        CameraProperties(locationRepository.locationSource.value!!.toLatLng())
+    )
+    val cameraProperties: LiveData<CameraProperties> = cameraPropertiesSource
 
     fun fetchApartments() {
         val shouldFetchApartments = apartmentsRepository.cachedApartments.value?.isNotEmpty() ?: true
@@ -72,17 +69,23 @@ class MapsViewModel : ViewModel() {
     fun stopFetchingLocation() = locationRepository.disconnect()
 
     fun onZoomChange(isZoomIn: Boolean) {
-        val currentZoom = cameraZoomSource.value!!
-        cameraZoomSource.value = if (isZoomIn) {
-            currentZoom.inc()
+        val cameraProperties = cameraPropertiesSource.value!!
+        val zoom = if (isZoomIn) {
+            cameraProperties.zoom.inc()
         } else {
-            currentZoom.dec()
+            cameraProperties.zoom.dec()
         }
+        cameraPropertiesSource.value = getNewCameraProperties(newZoom = zoom)
     }
 
     fun onCurrentLocationButtonClick() {
         val location = locationRepository.locationSource.value!!
-        cameraPositionSource.value = LatLng(location.latitude, location.longitude)
+        val currentLocation = LatLng(location.latitude, location.longitude)
+        cameraPropertiesSource.value = getNewCameraProperties(newLatLng = currentLocation)
+    }
+
+    fun resetCameraMovement() {
+        cameraPropertiesSource.value = getNewCameraProperties(shouldAnimate = false)
     }
 
     fun onScrollEnd(cardPosition: Int) {
@@ -91,7 +94,8 @@ class MapsViewModel : ViewModel() {
             return
         }
         val data = adapterItems[cardPosition]
-        cameraPositionSource.value = LatLng(data.latitude, data.longitude)
+        val latLng = LatLng(data.latitude, data.longitude)
+        cameraPropertiesSource.value = getNewCameraProperties(newLatLng = latLng)
     }
 
     fun onMapMarkerClick(apartmentId: Int): Int =
@@ -108,6 +112,17 @@ class MapsViewModel : ViewModel() {
     private fun List<Apartment>.mapToApartmentViewData(userLocation: Location) =
         map { it.toApartmentViewData(userLocation) }
             .sortedBy(ApartmentViewData::distanceToUserKm)
+
+    private fun getNewCameraProperties(
+        newLatLng: LatLng? = null,
+        newZoom: Float? = null,
+        shouldAnimate: Boolean = true
+    ): CameraProperties {
+        val currentProperties = cameraPropertiesSource.value!!
+        val latLng = newLatLng ?: currentProperties.latLng
+        val zoom = newZoom ?: currentProperties.zoom
+        return CameraProperties(latLng, zoom, shouldAnimate)
+    }
 }
 
 enum class LoadingState {

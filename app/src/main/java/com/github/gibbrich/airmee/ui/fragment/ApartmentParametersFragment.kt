@@ -36,8 +36,8 @@ class ApartmentParametersFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.dates.observe(this, Observer(::handleDates))
-        viewModel.beds.observe(this, Observer(::handleBedsCount))
+        viewModel.dates.observe(viewLifecycleOwner, Observer(::handleDates))
+        viewModel.beds.observe(viewLifecycleOwner, Observer(::handleBedsCount))
 
         apartment_parameters_pick_dates_button.setOnClickListener {
             showDateRangePicker(viewModel::onConfirmDatesButtonClick)

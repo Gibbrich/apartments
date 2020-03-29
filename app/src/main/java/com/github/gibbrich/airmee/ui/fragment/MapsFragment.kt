@@ -13,7 +13,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import androidx.core.app.ActivityCompat.requestPermissions
 import android.content.pm.PackageManager
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.gibbrich.airmee.R
@@ -22,6 +22,7 @@ import com.github.gibbrich.airmee.core.getLocationPermissions
 import com.github.gibbrich.airmee.manager.INavigationManager
 import com.github.gibbrich.airmee.di.DI
 import com.github.gibbrich.airmee.model.ApartmentViewData
+import com.github.gibbrich.airmee.model.CameraProperties
 import com.github.gibbrich.airmee.ui.ApartmentsAdapter
 import com.github.gibbrich.airmee.ui.utils.SnapHelperOneByOne
 import com.github.gibbrich.airmee.viewModel.MapsViewModel
@@ -37,7 +38,7 @@ class MapsFragment : Fragment() {
     @Inject
     internal lateinit var navigationManager: INavigationManager
 
-    private val viewModel: MapsViewModel by viewModels()
+    private val viewModel: MapsViewModel by activityViewModels()
     private lateinit var googleMap: GoogleMap
     private var adapter: ApartmentsAdapter? = null
 
@@ -110,6 +111,14 @@ class MapsFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        // after navigation to another screens and returning back
+        // we don't want camera change it's location
+        viewModel.resetCameraMovement()
+    }
+
     private fun onMapReady(map: GoogleMap) {
         googleMap = map
         googleMap.setOnMarkerClickListener {
@@ -118,9 +127,8 @@ class MapsFragment : Fragment() {
             false
         }
 
-        viewModel.apartments.observe(this, Observer(::handleApartments))
-        viewModel.cameraZoom.observe(this, Observer(::handleCameraZoom))
-        viewModel.cameraPosition.observe(this, Observer(::moveCameraFocus))
+        viewModel.apartments.observe(viewLifecycleOwner, Observer(::handleApartments))
+        viewModel.cameraProperties.observe(viewLifecycleOwner, Observer(::handleCameraPropertiesSource))
 
         activity?.let {
             if (checkLocationPermission(it)) {
@@ -135,15 +143,18 @@ class MapsFragment : Fragment() {
         }
     }
 
-    private fun handleCameraZoom(zoom: Float) =
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(zoom))
+    private fun handleCameraPropertiesSource(cameraProperties: CameraProperties) {
+        if (cameraProperties.shouldAnimate.not()) {
+            return
+        }
 
-    private fun moveCameraFocus(position: LatLng) = googleMap.animateCamera(
-        CameraUpdateFactory.newLatLngZoom(
-            position,
-            viewModel.cameraZoom.value!!
+        googleMap.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                cameraProperties.latLng,
+                cameraProperties.zoom
+            )
         )
-    )
+    }
 
     override fun onResume() {
         super.onResume()
