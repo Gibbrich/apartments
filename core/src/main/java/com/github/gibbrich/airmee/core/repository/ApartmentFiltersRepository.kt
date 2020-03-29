@@ -10,10 +10,27 @@ import com.github.gibbrich.airmee.core.model.BookingRange
  * [ApartmentFiltersRepository] is not null.
  */
 interface ApartmentFiltersRepository {
+    /**
+     * Source of [ApartmentFilter]. Always not null.
+     * Default item - [ApartmentFilter] with default constructor parameters
+     */
     val filter: LiveData<ApartmentFilter>
 
+    /**
+     * Update [ApartmentFilter.beds] and emits new value of [ApartmentFiltersRepository.filter]
+     * @param isIncrease increments/decrements number of beds
+     */
     fun changeBedsQuantity(isIncrease: Boolean)
+
+    /**
+     * Update [ApartmentFilter.bookingRange] and emits new value of [ApartmentFiltersRepository.filter]
+     * @param bookingRange null if user cleared filtering by date
+     */
     fun changeRange(bookingRange: BookingRange?)
+
+    /**
+     * Update [ApartmentFiltersRepository.filter] value with [ApartmentFilter] with default constructor parameters
+     */
     fun clearFilters()
 }
 
