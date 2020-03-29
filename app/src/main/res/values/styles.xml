@@ -9,7 +9,7 @@
     </style>
 
     <style name="TextAppearance.AppCompat.Medium.Black" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
 
 </resources>
