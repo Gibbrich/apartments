@@ -2,6 +2,7 @@ object Deps {
     private const val kotlinVersion = "1.3.50"
     const val androidGradle = "com.android.tools.build:gradle:3.5.0"
     const val kotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    const val googleServises = "com.google.gms:google-services:4.3.3"
     const val coroutines_android_version = "1.3.2"
     const val lifecycle_version = "2.1.0"
 
